@@ -1,10 +1,8 @@
+import 'react-native-gesture-handler';
 import React from 'react';
-import {Text, View} from 'react-native';
+
+import ClientStack from './src/components/AuthStack';
 
 export default function App() {
-  return (
-    <View>
-      <Text>Hello Barbery Users</Text>
-    </View>
-  );
+  return <ClientStack />;
 }
