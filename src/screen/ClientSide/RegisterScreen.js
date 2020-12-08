@@ -93,6 +93,10 @@ function RegisterScreen(props) {
           colors={[colors.orange, colors.red]}
           style={[styles.button]}>
           <TouchableOpacity
+            style={{
+              width: '100%',
+              alignItems: 'center',
+            }}
             onPress={() => props.navigation.navigate('MainApp')}>
             <Text style={styles.textBtn}>Register</Text>
           </TouchableOpacity>

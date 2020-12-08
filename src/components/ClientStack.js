@@ -8,6 +8,8 @@ import colors from '../styles/colors';
 
 import HomeScreen from '../screen/ClientSide/HomeScreen';
 import ProfileScreen from '../screen/ClientSide/ProfileScreen';
+import AppointmentListScreen from '../screen/ClientSide/AppointmentScreen';
+import AppointmentDetailScreen from '../screen/ClientSide/AppointmentDetailScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -58,11 +60,37 @@ export default class ClientStack extends Component {
   // 	</Stack.Navigator>
   // );
 
+  createAppointmentStack = () => (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Appointment Screen"
+        component={AppointmentListScreen}
+        options={{
+          // headerStyle: { backgroundColor: colors.red },
+          // headerTintColor: 'white',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Appointment Details"
+        component={AppointmentDetailScreen}
+        options={{
+          headerStyle: {backgroundColor: colors.red},
+          headerTintColor: 'white',
+        }}
+      />
+    </Stack.Navigator>
+  );
+
   render() {
     return (
       <Drawer.Navigator edgeWidth={200}>
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Profile" component={ProfileScreen} />
+        <Drawer.Screen
+          name="Appointment"
+          children={this.createAppointmentStack}
+        />
         {/* <Drawer.Screen name="Services" children={this.createServiceStack} /> */}
       </Drawer.Navigator>
     );

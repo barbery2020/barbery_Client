@@ -17,13 +17,28 @@ import colors from '../../styles/colors';
 import profileImg from '../../utils/profileImg';
 
 function ProfileScreen() {
-  const [image, setImage] = useState(profileImg.img);
-  const [firstName, setFirstName] = useState('Ahmed');
-  const [lastName, setLastName] = useState('Raza');
-  const [email, setEmail] = useState('ahmedraza1@gmail.com');
-  const [phone, setPhone] = useState('+923167512234');
-  const [password, setPassword] = useState('12345raza');
-  // const [isChange, setChange] = useState(false);
+  // const [image, setImage] = useState(profileImg.img);
+  // const [firstName, setFirstName] = useState('Ahmed');
+  // const [lastName, setLastName] = useState('Raza');
+  // const [email, setEmail] = useState('ahmedraza1@gmail.com');
+  // const [phone, setPhone] = useState('+923167512234');
+  // const [password, setPassword] = useState('12345raza');
+  const [isChange, setChange] = useState(false);
+
+  const [form, setForm] = useState({
+    firstName: 'Ahmed',
+    lastName: 'Raza',
+    email: 'ahmedraza1@gmail.com',
+    phone: '+923167512234',
+    password: '12345raza',
+    image: profileImg.img,
+  });
+
+  const {firstName, lastName, email, phone, password, image} = form;
+
+  const onChange = (text, name) => {
+    setForm({...form, [name]: text});
+  };
 
   const selectFile = () => {
     var options = {
@@ -41,16 +56,12 @@ function ProfileScreen() {
         console.log('ImagePicker Error: ', res.error);
       } else {
         const uri = `data:${res.type};base64,${res.data}`;
-        setImage(uri);
+        // setImage(uri);
+        onChange(uri, 'image');
+        setChange(true);
       }
     });
   };
-
-  // return (
-  //   <View>
-  //     <Text>Profile screen</Text>
-  //   </View>
-  // );
 
   return (
     <ScrollView style={styles.container}>
@@ -65,7 +76,10 @@ function ProfileScreen() {
               style={styles.textInput}
               placeholder={'Ahmed'}
               maxLength={50}
-              onChangeText={(text) => setFirstName(text)}
+              onChangeText={(text) => {
+                onChange(text, 'firstName');
+                setChange(true);
+              }}
               value={firstName}
             />
           </View>
@@ -75,7 +89,10 @@ function ProfileScreen() {
               style={styles.textInput}
               placeholder={'Raza'}
               maxLength={50}
-              onChangeText={(text) => setLastName(text)}
+              onChangeText={(text) => {
+                onChange(text, 'lastName');
+                setChange(true);
+              }}
               value={lastName}
             />
           </View>
@@ -85,7 +102,10 @@ function ProfileScreen() {
           style={styles.textInput}
           placeholder={'e.g. abc@gmail.com'}
           maxLength={50}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text) => {
+            onChange(text, 'email');
+            setChange(true);
+          }}
           value={email}
         />
         <Text style={styles.text}>Phone no.</Text>
@@ -95,7 +115,10 @@ function ProfileScreen() {
           keyboardType={'numeric'}
           maxLength={13}
           minLength={11}
-          onChangeText={(text) => setPhone(text)}
+          onChangeText={(text) => {
+            onChange(text, 'phone');
+            setChange(true);
+          }}
           value={phone}
         />
         <Text style={styles.text}>Password</Text>
@@ -103,22 +126,25 @@ function ProfileScreen() {
           style={styles.textInput}
           placeholder={'***'}
           maxLength={20}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={(text) => {
+            onChange(text, 'password');
+            setChange(true);
+          }}
           secureTextEntry={true}
           value={password}
         />
 
-        {/* {isChange ? ( */}
-        <LinearGradient
-          colors={[colors.orange, colors.red]}
-          style={styles.button}>
-          <TouchableOpacity
-            style={{width: '100%', alignItems: 'center'}}
-            onPress={() => alert('Profile is updated.')}>
-            <Text style={styles.textBtn}>Save</Text>
-          </TouchableOpacity>
-        </LinearGradient>
-        {/* ) : null} */}
+        {isChange && (
+          <LinearGradient
+            colors={[colors.orange, colors.red]}
+            style={styles.button}>
+            <TouchableOpacity
+              style={{width: '100%', alignItems: 'center'}}
+              onPress={() => alert('Profile is updated.')}>
+              <Text style={styles.textBtn}>Save</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        )}
       </View>
     </ScrollView>
   );
