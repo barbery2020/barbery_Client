@@ -183,7 +183,7 @@ export default function AppointmentScreen(props) {
               maxLength={50}
               value={isDate}
             />
-            <Icon name="calendar" color={colors.dark} size={20} />
+            <Icon name="calendar" color={colors.red} size={22} />
           </View>
         </TouchableOpacity>
       </View>
@@ -239,12 +239,12 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     elevation: 5,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     justifyContent: 'space-between',
     alignItems: 'center',
     textAlign: 'center',
     margin: 15,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: colors.red,
     backgroundColor: colors.white,
   },

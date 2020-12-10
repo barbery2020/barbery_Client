@@ -22,51 +22,6 @@ const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 export default class ClientStack extends Component {
-  // createServiceStack = () => (
-  // 	<Stack.Navigator>
-  // 		<Stack.Screen
-  // 			name="Services List"
-  // 			component={ServicesListScreen}
-  // 			options={{
-  // 				headerStyle: { backgroundColor: colors.red },
-  // 				headerTintColor: 'white',
-  // 			}}
-  // 		/>
-  // 		<Stack.Screen
-  // 			name="Service Details"
-  // 			component={ServiceDetailsScreen}
-  // 			options={{
-  // 				headerStyle: { backgroundColor: colors.red },
-  // 				headerTintColor: 'white',
-  // 			}}
-  // 		/>
-  // 		<Stack.Screen
-  // 			name="Add Service"
-  // 			component={ServicesAddScreen}
-  // 			options={{
-  // 				headerStyle: { backgroundColor: colors.red },
-  // 				headerTintColor: 'white',
-  // 			}}
-  // 		/>
-  // 		<Stack.Screen
-  // 			name="Update Service"
-  // 			component={ServicesEditScreen}
-  // 			options={{
-  // 				headerStyle: { backgroundColor: colors.red },
-  // 				headerTintColor: 'white',
-  // 			}}
-  // 		/>
-  // 		<Stack.Screen
-  // 			name="Image View"
-  // 			component={ViewImageScreen}
-  // 			options={{
-  // 				headerStyle: { backgroundColor: 'black' },
-  // 				headerTintColor: 'white',
-  // 			}}
-  // 		/>
-  // 	</Stack.Navigator>
-  // );
-
   BottomTabs = () => {
     return (
       <Tab.Navigator
@@ -147,10 +102,11 @@ export default class ClientStack extends Component {
 
   render() {
     return (
-      <Drawer.Navigator edgeWidth={200}>
+      <Drawer.Navigator edgeWidth={100}>
         <Drawer.Screen
           name="Home"
           children={this.BottomTabs}
+
           // component={HomeScreen}
         />
         {/* <Drawer.Screen name="Profile" component={ProfileScreen} />
