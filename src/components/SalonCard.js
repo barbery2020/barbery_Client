@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     paddingVertical: 5,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     // backgroundColor: colors.dark,
   },
   card: {
@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     elevation: 10,
     overflow: 'hidden',
-    marginVertical: 10,
+    marginTop: 5,
+    marginBottom: 10,
   },
   detailsContainer: {
     paddingHorizontal: 15,

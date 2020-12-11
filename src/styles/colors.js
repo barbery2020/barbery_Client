@@ -8,4 +8,5 @@ export default {
   light: '#f9f9f9',
   medium: '#a6a6a6',
   dark: '#7a7a7a',
+  dark2: '#3B3B3B',
 };

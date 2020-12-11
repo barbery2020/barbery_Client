@@ -13,6 +13,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 
 // import Card from '../../components/AppointmentCard';
 import SalonCard from '../../components/SalonCard';
+import PhotoCard from '../../components/PhotoCard';
 import colors from '../../styles/colors';
 
 const salons = [
@@ -46,11 +47,34 @@ const salons = [
   },
 ];
 
+const photos = [
+  {
+    id: 1,
+    image: require('../../assets/images/image_1.jpg'),
+  },
+  {
+    id: 2,
+    image: require('../../assets/images/image_1.jpg'),
+  },
+  {
+    id: 3,
+    image: require('../../assets/images/image_1.jpg'),
+  },
+  {
+    id: 4,
+    image: require('../../assets/images/image_1.jpg'),
+  },
+  {
+    id: 5,
+    image: require('../../assets/images/image_1.jpg'),
+  },
+];
+
 export default function HomeScreen(props) {
   const [isSearch, setSearch] = useState('');
 
   return (
-    <ScrollView style={styles.screen}>
+    <View style={styles.screen}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Icon
           style={{ margin: 10 }}
@@ -67,7 +91,7 @@ export default function HomeScreen(props) {
           onPress={() => props.navigation.toggleDrawer()}
         />
       </View>
-      <Text style={{ fontSize: 26, textAlign: 'center' }}>
+      <Text style={{ fontSize: 26, marginTop: -12, textAlign: 'center' }}>
         Find and Book best Services
       </Text>
       <View style={styles.textInput}>
@@ -79,11 +103,12 @@ export default function HomeScreen(props) {
         />
         <Icon name="search1" color={colors.red} size={25} />
       </View>
-      <Text style={{ fontSize: 22, marginLeft: 20, marginTop: 10 }}>
+      <Text style={{ fontSize: 22, marginLeft: 20, marginTop: 5 }}>
         Best Salon
       </Text>
       <FlatList
         horizontal={true}
+        contentContainerStyle={{ paddingHorizontal: 5 }}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         data={salons}
@@ -98,7 +123,32 @@ export default function HomeScreen(props) {
           />
         )}
       />
-    </ScrollView>
+      <View style={{ backgroundColor: colors.dark2 }}>
+        <Text
+          style={{
+            fontSize: 22,
+            marginLeft: 20,
+            marginTop: 10,
+            color: colors.white,
+          }}>
+          Latest Styles
+        </Text>
+        <FlatList
+          horizontal={true}
+          contentContainerStyle={{ paddingHorizontal: 5 }}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          data={photos}
+          keyExtractor={(photo) => photo.id.toString()}
+          renderItem={({ item }) => (
+            <PhotoCard
+              image={item.image}
+              onPress={() => console.log('Salon pressed')}
+            />
+          )}
+        />
+      </View>
+    </View>
   );
 }
 
@@ -111,7 +161,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   textInput: {
-    flex: 1,
     flexDirection: 'row',
     height: 40,
     borderRadius: 20,
@@ -120,8 +169,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     textAlign: 'center',
-    margin: 15,
-    // marginHorizontal: 5,
+    marginVertical: 10,
+    marginHorizontal: 15,
     borderWidth: 1,
     borderColor: colors.red,
     backgroundColor: colors.white,
