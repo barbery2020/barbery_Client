@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import ImageView from 'react-native-image-viewing';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
@@ -54,24 +55,26 @@ const photos = [
   },
   {
     id: 2,
-    image: require('../../assets/images/image_1.jpg'),
+    image: require('../../assets/images/image_2.jpg'),
   },
   {
     id: 3,
-    image: require('../../assets/images/image_1.jpg'),
+    image: require('../../assets/images/image_3.jpg'),
   },
   {
     id: 4,
-    image: require('../../assets/images/image_1.jpg'),
+    image: require('../../assets/images/image_5.jpg'),
   },
   {
     id: 5,
-    image: require('../../assets/images/image_1.jpg'),
+    image: require('../../assets/images/image_6.jpg'),
   },
 ];
 
 export default function HomeScreen(props) {
   const [isSearch, setSearch] = useState('');
+  const [visible, setIsVisible] = useState(false);
+  const [imageIndex, setImageIndex] = useState();
 
   return (
     <View style={styles.screen}>
@@ -107,6 +110,7 @@ export default function HomeScreen(props) {
         Best Salon
       </Text>
       <FlatList
+        style={{ height: '35%' }}
         horizontal={true}
         contentContainerStyle={{ paddingHorizontal: 5 }}
         showsVerticalScrollIndicator={false}
@@ -119,7 +123,7 @@ export default function HomeScreen(props) {
             subTitle={item.address}
             rating={item.rating}
             image={item.image}
-            onPress={() => console.log('Salon pressed')}
+            onPress={() => props.navigation.navigate('Salon Profile')}
           />
         )}
       />
@@ -134,6 +138,7 @@ export default function HomeScreen(props) {
           Latest Styles
         </Text>
         <FlatList
+          style={{ height: '35%' }}
           horizontal={true}
           contentContainerStyle={{ paddingHorizontal: 5 }}
           showsVerticalScrollIndicator={false}
@@ -141,11 +146,14 @@ export default function HomeScreen(props) {
           data={photos}
           keyExtractor={(photo) => photo.id.toString()}
           renderItem={({ item }) => (
-            <PhotoCard
-              image={item.image}
-              onPress={() => console.log('Salon pressed')}
-            />
+            <PhotoCard image={item.image} onPress={() => setIsVisible(true)} />
           )}
+        />
+        <ImageView
+          images={photos}
+          imageIndex={0}
+          visible={visible}
+          onRequestClose={() => setIsVisible(false)}
         />
       </View>
     </View>

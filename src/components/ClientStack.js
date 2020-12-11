@@ -12,6 +12,7 @@ import colors from '../styles/colors';
 
 import HomeScreen from '../screen/ClientSide/HomeScreen';
 import ProfileScreen from '../screen/ClientSide/ProfileScreen';
+import SalonProfileScreen from '../screen/ClientSide/SalonProfileScreen';
 import AppointmentListScreen from '../screen/ClientSide/AppointmentScreen';
 import AppointmentDetailScreen from '../screen/ClientSide/AppointmentDetailScreen';
 import ChatScreen from '../screen/others/ChatScreen';
@@ -35,7 +36,7 @@ export default class ClientStack extends Component {
       >
         <Tab.Screen
           name="Home"
-          component={HomeScreen}
+          children={this.createHomeAndSalonStack}
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ color }) => (
@@ -97,6 +98,33 @@ export default class ClientStack extends Component {
           headerTintColor: 'white',
         }}
       />
+    </Stack.Navigator>
+  );
+
+  createHomeAndSalonStack = () => (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Salon Profile"
+        component={SalonProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      {/* <Stack.Screen
+        name="Appointment Details"
+        component={AppointmentDetailScreen}
+        options={{
+          headerStyle: { backgroundColor: colors.red },
+          headerTintColor: 'white',
+        }}
+      /> */}
     </Stack.Navigator>
   );
 

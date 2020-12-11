@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native';
 
 import colors from '../styles/colors';
 
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   card: {
-    height: 200,
+    height: '90%',
     width: 300,
     backgroundColor: colors.white,
     borderRadius: 15,
