@@ -12,7 +12,7 @@ import {
 import { Rating } from 'react-native-ratings';
 import LinearGradient from 'react-native-linear-gradient';
 import Foundation from 'react-native-vector-icons/Foundation';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ant from 'react-native-vector-icons/AntDesign';
 
 import SpecialistCard from '../../components/SpecialistCard';
 import ReviewCard from '../../components/ReviewCard';
@@ -122,7 +122,7 @@ const reviews = [
   },
 ];
 
-export default function SalonProfileScreen() {
+export default function SalonProfileScreen(props) {
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, []);
@@ -135,6 +135,19 @@ export default function SalonProfileScreen() {
         <LinearGradient
           colors={[(0, 0, 0, 0), (0, 0, 0, 0), colors.black]}
           style={{ flex: 1 }}>
+          <TouchableOpacity
+            style={{
+              height: 25,
+              width: 25,
+              margin: 15,
+              borderRadius: 15,
+              elevation: 5,
+              alignContent: 'center',
+              backgroundColor: colors.red,
+            }}
+            onPress={() => props.navigation.goBack()}>
+            <Ant name="arrowleft" size={25} color={colors.white} />
+          </TouchableOpacity>
           <View
             style={{
               width: '100%',
@@ -171,23 +184,25 @@ export default function SalonProfileScreen() {
           backgroundColor: colors.white,
         }}>
         <TouchableOpacity style={{ alignItems: 'center' }}>
-          <AntDesign name="picture" size={30} color={colors.dark} />
+          <Ant name="picture" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Gallery</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ alignItems: 'center' }}>
-          <AntDesign name="appstore-o" size={30} color={colors.dark} />
+        <TouchableOpacity
+          style={{ alignItems: 'center' }}
+          onPress={() => props.navigation.navigate('Services Screen')}>
+          <Ant name="appstore-o" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Services</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ alignItems: 'center' }}>
-          <AntDesign name="clockcircleo" size={30} color={colors.red} />
+          <Ant name="clockcircleo" size={30} color={colors.red} />
           <Text style={{ fontSize: 12, color: colors.red }}>Booking</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ alignItems: 'center' }}>
-          <AntDesign name="message1" size={30} color={colors.dark} />
+          <Ant name="message1" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Contact</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ alignItems: 'center' }}>
-          <AntDesign name="enviromento" size={30} color={colors.dark} />
+          <Ant name="enviromento" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Direction</Text>
         </TouchableOpacity>
       </View>

@@ -13,6 +13,7 @@ import colors from '../styles/colors';
 import HomeScreen from '../screen/ClientSide/HomeScreen';
 import ProfileScreen from '../screen/ClientSide/ProfileScreen';
 import SalonProfileScreen from '../screen/ClientSide/SalonProfileScreen';
+import ServicesScreen from '../screen/ClientSide/ServicesListScreen';
 import AppointmentListScreen from '../screen/ClientSide/AppointmentScreen';
 import AppointmentDetailScreen from '../screen/ClientSide/AppointmentDetailScreen';
 import ChatScreen from '../screen/others/ChatScreen';
@@ -114,7 +115,21 @@ export default class ClientStack extends Component {
         name="Salon Profile"
         component={SalonProfileScreen}
         options={{
+          // headerTintColor: colors.white,
+          // headerShown: true,
+          // headerTransparent: true,
           headerShown: false,
+        }}
+        // options={{
+        //   headerShown: false,
+        // }}
+      />
+      <Stack.Screen
+        name="Services Screen"
+        component={ServicesScreen}
+        options={{
+          headerStyle: { backgroundColor: colors.red },
+          headerTintColor: 'white',
         }}
       />
       {/* <Stack.Screen
