@@ -13,11 +13,6 @@ import colors from '../styles/colors';
 
 function ReviewCard({ title, text, rated, time }) {
   return (
-    // <TouchableHighlight
-    //   style={styles.screen}
-    //   underlayColor={colors.light}
-    //   // onPress={onPress}
-    // >
     <View style={styles.card}>
       <View style={{ flex: 1 }}>
         <View style={styles.detailsContainer}>
@@ -28,7 +23,7 @@ function ReviewCard({ title, text, rated, time }) {
           <View style={styles.rightContainer}>
             <Rating
               style={styles.rating}
-              imageSize={30}
+              imageSize={20}
               ratingCount={5}
               startingValue={rated}
               readonly={true}
@@ -38,7 +33,6 @@ function ReviewCard({ title, text, rated, time }) {
         <Text style={styles.text}>{text}</Text>
       </View>
     </View>
-    // </TouchableHighlight>
   );
 }
 
@@ -46,11 +40,6 @@ const styles = StyleSheet.create({
   completed: {
     color: colors.orange,
   },
-  // screen: {
-  //   flex: 1,
-  //   paddingVertical: 8,
-  //   paddingHorizontal: 15,
-  // },
   card: {
     flex: 1,
     flexDirection: 'row',
@@ -66,14 +55,12 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flex: 1,
     flexDirection: 'row',
-    paddingBottom: 10,
     paddingHorizontal: 10,
   },
   leftContainer: {
     flex: 2,
     alignItems: 'flex-start',
     marginVertical: 10,
-    // backgroundColor: colors.red,
   },
   rightContainer: {
     flex: 1,
