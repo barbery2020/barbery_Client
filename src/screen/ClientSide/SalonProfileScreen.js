@@ -193,7 +193,11 @@ export default function SalonProfileScreen(props) {
           <Ant name="appstore-o" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Services</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{ alignItems: 'center' }}
+          onPress={() =>
+            props.navigation.navigate('Services Selection Screen')
+          }>
           <Ant name="clockcircleo" size={30} color={colors.red} />
           <Text style={{ fontSize: 12, color: colors.red }}>Booking</Text>
         </TouchableOpacity>
