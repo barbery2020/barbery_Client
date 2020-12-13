@@ -17,6 +17,7 @@ import ServicesScreen from '../screen/ClientSide/ServicesListScreen';
 import ServicesSelectionScreen from '../screen/ClientSide/ServicesSelectionScreen';
 import AppointmentListScreen from '../screen/ClientSide/AppointmentScreen';
 import AppointmentDetailScreen from '../screen/ClientSide/AppointmentDetailScreen';
+import SpecialistDetailsScreen from '../screen/ClientSide/SpecialistDetailsScreen';
 import ChatScreen from '../screen/others/ChatScreen';
 
 const Drawer = createDrawerNavigator();
@@ -136,6 +137,14 @@ export default class ClientStack extends Component {
       <Stack.Screen
         name="Services Screen"
         component={ServicesScreen}
+        options={{
+          headerStyle: { backgroundColor: colors.red },
+          headerTintColor: 'white',
+        }}
+      />
+      <Stack.Screen
+        name="Specialist Details Screen"
+        component={SpecialistDetailsScreen}
         options={{
           headerStyle: { backgroundColor: colors.red },
           headerTintColor: 'white',

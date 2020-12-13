@@ -1,18 +1,11 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  TouchableHighlight,
-  Dimensions,
-} from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 import colors from '../styles/colors';
 
 function SpecialistCard({ title, image, onPress }) {
   return (
-    <TouchableHighlight
+    <TouchableOpacity
       style={styles.screen}
       underlayColor={colors.light}
       onPress={onPress}>
@@ -20,7 +13,7 @@ function SpecialistCard({ title, image, onPress }) {
         <Image style={styles.card} source={image} />
         <Text style={styles.title}>{title}</Text>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 }
 

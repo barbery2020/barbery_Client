@@ -20,14 +20,17 @@ const hairArr = [
   {
     name: 'select',
     price: '0',
+    id: 1,
   },
   {
     name: 'fauji cut',
     price: '150',
+    id: 2,
   },
   {
     name: 'spicy cut',
     price: '200',
+    id: 3,
   },
 ];
 
@@ -35,14 +38,17 @@ const shaveArr = [
   {
     name: 'select',
     price: '0',
+    id: 1,
   },
   {
     name: 'fauji cut',
     price: '150',
+    id: 2,
   },
   {
     name: 'spicy cut',
     price: '200',
+    id: 3,
   },
 ];
 
@@ -50,14 +56,17 @@ const stylingArr = [
   {
     name: 'select',
     price: '0',
+    id: 1,
   },
   {
     name: 'fauji cut',
     price: '150',
+    id: 2,
   },
   {
     name: 'spicy cut',
     price: '200',
+    id: 3,
   },
 ];
 
@@ -65,14 +74,17 @@ const hairColorArr = [
   {
     name: 'select',
     price: '0',
+    id: 1,
   },
   {
     name: 'fauji cut',
     price: '150',
+    id: 2,
   },
   {
     name: 'spicy cut',
     price: '200',
+    id: 3,
   },
 ];
 
@@ -80,14 +92,17 @@ const waxingArr = [
   {
     name: 'select',
     price: '0',
+    id: 1,
   },
   {
     name: 'fauji cut',
     price: '150',
+    id: 2,
   },
   {
     name: 'spicy cut',
     price: '200',
+    id: 3,
   },
 ];
 
@@ -95,14 +110,17 @@ const mensServicesArr = [
   {
     name: 'select',
     price: '0',
+    id: 1,
   },
   {
     name: 'fauji cut',
     price: '150',
+    id: 2,
   },
   {
     name: 'spicy cut',
     price: '200',
+    id: 3,
   },
 ];
 
@@ -110,14 +128,17 @@ const nailsArr = [
   {
     name: 'select',
     price: '0',
+    id: 1,
   },
   {
     name: 'fauji cut',
     price: '150',
+    id: 2,
   },
   {
     name: 'spicy cut',
     price: '200',
+    id: 3,
   },
 ];
 
@@ -125,14 +146,17 @@ const othersArr = [
   {
     name: 'select',
     price: '0',
+    id: 1,
   },
   {
     name: 'fauji cut',
     price: '150',
+    id: 2,
   },
   {
     name: 'spicy cut',
     price: '200',
+    id: 3,
   },
 ];
 
@@ -140,14 +164,17 @@ const packagesArr = [
   {
     name: 'select',
     price: '0',
+    id: 1,
   },
   {
     name: 'fauji cut',
     price: '150',
+    id: 2,
   },
   {
     name: 'spicy cut',
     price: '200',
+    id: 3,
   },
 ];
 

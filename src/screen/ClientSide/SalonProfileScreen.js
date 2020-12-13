@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   FlatList,
+  Linking,
   LogBox,
 } from 'react-native';
 import { Rating } from 'react-native-ratings';
@@ -123,9 +124,23 @@ const reviews = [
 ];
 
 export default function SalonProfileScreen(props) {
+  const [getCoordinate, setCoordinate] = useState({
+    latitude: 33.656969,
+    longitude: 73.153954,
+    latitudeDelta: 0.001,
+    longitudeDelta: 0.001,
+  });
+
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, []);
+
+  const openGoogleMaps = () => {
+    const scheme = 'geo:0,0?q=';
+    const url = scheme + `${getCoordinate.latitude},${getCoordinate.longitude}`;
+    Linking.openURL(url);
+  };
+
   return (
     <ScrollView
       style={styles.screen}
@@ -205,7 +220,9 @@ export default function SalonProfileScreen(props) {
           <Ant name="message1" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Contact</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{ alignItems: 'center' }}
+          onPress={() => openGoogleMaps()}>
           <Ant name="enviromento" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Direction</Text>
         </TouchableOpacity>
@@ -227,7 +244,9 @@ export default function SalonProfileScreen(props) {
               title={item.title}
               status={item.status}
               image={item.image}
-              onPress={() => console.log(item.id)}
+              onPress={() =>
+                props.navigation.navigate('Specialist Details Screen')
+              }
             />
           )}
         />
