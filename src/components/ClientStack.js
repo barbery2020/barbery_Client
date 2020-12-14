@@ -15,6 +15,7 @@ import ProfileScreen from '../screen/ClientSide/ProfileScreen';
 import SalonProfileScreen from '../screen/ClientSide/SalonProfileScreen';
 import ServicesScreen from '../screen/ClientSide/ServicesListScreen';
 import ServicesSelectionScreen from '../screen/ClientSide/ServicesSelectionScreen';
+import GalleryScreen from '../screen/ClientSide/GalleryScreen';
 import AppointmentListScreen from '../screen/ClientSide/AppointmentScreen';
 import AppointmentDetailScreen from '../screen/ClientSide/AppointmentDetailScreen';
 import SpecialistDetailsScreen from '../screen/ClientSide/SpecialistDetailsScreen';
@@ -145,6 +146,14 @@ export default class ClientStack extends Component {
       <Stack.Screen
         name="Specialist Details Screen"
         component={SpecialistDetailsScreen}
+        options={{
+          headerStyle: { backgroundColor: colors.red },
+          headerTintColor: 'white',
+        }}
+      />
+      <Stack.Screen
+        name="Gallery Screen"
+        component={GalleryScreen}
         options={{
           headerStyle: { backgroundColor: colors.red },
           headerTintColor: 'white',

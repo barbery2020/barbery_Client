@@ -198,7 +198,9 @@ export default function SalonProfileScreen(props) {
           paddingHorizontal: 30,
           backgroundColor: colors.white,
         }}>
-        <TouchableOpacity style={{ alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{ alignItems: 'center' }}
+          onPress={() => props.navigation.navigate('Gallery Screen')}>
           <Ant name="picture" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Gallery</Text>
         </TouchableOpacity>

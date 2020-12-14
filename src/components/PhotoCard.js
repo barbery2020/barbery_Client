@@ -3,11 +3,11 @@ import { View, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native';
 
 import colors from '../styles/colors';
 
-export default function SalonCard({ image, onPress }) {
+export default function PhotoCard({ image, onPress }) {
   return (
     <View style={styles.screen}>
       <TouchableOpacity style={styles.card} onPress={onPress}>
-        <Image style={styles.image} source={image} />
+        <Image style={styles.image} source={{ uri: image }} />
       </TouchableOpacity>
     </View>
   );

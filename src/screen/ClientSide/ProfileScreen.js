@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -34,10 +34,10 @@ function ProfileScreen() {
     image: profileImg.img,
   });
 
-  const {firstName, lastName, email, phone, password, image} = form;
+  const { firstName, lastName, email, phone, password, image } = form;
 
   const onChange = (text, name) => {
-    setForm({...form, [name]: text});
+    setForm({ ...form, [name]: text });
   };
 
   const selectFile = () => {
@@ -66,7 +66,7 @@ function ProfileScreen() {
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity style={styles.imageContainer} onPress={selectFile}>
-        <Image style={styles.profileImage} source={{uri: image}} />
+        <Image style={styles.profileImage} source={{ uri: image }} />
       </TouchableOpacity>
       <View style={styles.profileData}>
         <View style={styles.row}>
@@ -139,7 +139,7 @@ function ProfileScreen() {
             colors={[colors.orange, colors.red]}
             style={styles.button}>
             <TouchableOpacity
-              style={{width: '100%', alignItems: 'center'}}
+              style={{ width: '100%', alignItems: 'center' }}
               onPress={() => alert('Profile is updated.')}>
               <Text style={styles.textBtn}>Save</Text>
             </TouchableOpacity>
