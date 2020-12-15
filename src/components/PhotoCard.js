@@ -7,7 +7,12 @@ export default function PhotoCard({ image, onPress }) {
   return (
     <View style={styles.screen}>
       <TouchableOpacity style={styles.card} onPress={onPress}>
-        <Image style={styles.image} source={{ uri: image }} />
+        <Image
+          resizeMethod="auto"
+          resizeMode="cover"
+          style={styles.image}
+          source={{ uri: image }}
+        />
       </TouchableOpacity>
     </View>
   );

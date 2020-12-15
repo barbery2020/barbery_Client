@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {
+  Dimensions,
+  FlatList,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
-  ScrollView,
-  FlatList,
 } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import { toJson, createApi } from 'unsplash-js';
 import axios from 'axios';
-import UnsplashSearch, { UnsplashPhoto } from 'react-native-unsplash';
 
-import nodeFetch from 'node-fetch';
-
-// import Card from '../../components/AppointmentCard';
 import SalonCard from '../../components/SalonCard';
 import PhotoCard from '../../components/PhotoCard';
 import colors from '../../styles/colors';
@@ -52,106 +48,62 @@ const salons = [
   },
 ];
 
-const photos = [
-  {
-    id: 1,
-    uri: 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4',
-  },
-  {
-    id: 2,
-    uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-  },
-  {
-    id: 3,
-    uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-  },
-];
-
 export default function HomeScreen(props) {
-  const [isSearch, setSearch] = useState('');
+  const [search, setSearch] = useState('');
   const [visible, setIsVisible] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [pics, setPics] = useState([]);
 
-  // const unsplash = createApi({
-  //   accessKey: 'SB5406YTRMmCCW4wD6OxYv8RkMyjqeY0pxy9z7PMbD4',
-  //   fetch: nodeFetch,
-  // });
+  const height = Math.round(Dimensions.get('window').height);
 
-  // unsplash.search.getPhotos({
-  //   query: 'cat',
-  //   page: 1,
-  //   perPage: 10,
-  //   orderBy: 'latest',
-  // });
+  const clientID = 'SB5406YTRMmCCW4wD6OxYv8RkMyjqeY0pxy9z7PMbD4';
+  const url = `https://api.unsplash.com/search/photos?page=${Math.floor(
+    1 + Math.random() * 3,
+  )}&per_page=30&query=man-face&client_id=${clientID}`;
 
-  // const unsplash = createApi({
-  //   accessKey: 'SB5406YTRMmCCW4wD6OxYv8RkMyjqeY0pxy9z7PMbD4',
-  // });
+  const apiCall = async () => {
+    const res = await axios.get(url);
 
-  // // non-feed example
-  // unsplash.photos.get({ photoId: 'foo' }).then((result) => {
-  //   if (result.errors) {
-  //     // handle error here
-  //     console.log('error occurred: ', result.errors[0]);
-  //   } else {
-  //     // handle success here
-  //     const photo = result.response;
-  //     console.log(photo);
-  //   }
-  // });
-  // const clientID = 'SB5406YTRMmCCW4wD6OxYv8RkMyjqeY0pxy9z7PMbD4';
-  // const url =
-  //   'https://api.unsplash.com/photos?page=1&query=hairstyles&client_id' +
-  //   clientID;
+    const photos = res.data?.results?.map(
+      ({ id, urls: { regular, small } }) => ({
+        id,
+        uri: regular,
+        small,
+      }),
+    );
+    setPics(photos);
+  };
 
-  // const unsplash = new Unsplash({
-  //   accessKey: 'SB5406YTRMmCCW4wD6OxYv8RkMyjqeY0pxy9z7PMbD4',
-  // });
-
-  // const apiCall = async () => {
-  //   // await axios.get(url).then((res) => {
-  //   //   console.log(res);
-  //   // });
-  //   unsplash.search
-  //     .photos(1, 20)
-  //     .then(toJson)
-  //     .then((json) => {
-  //       setPics(json.results);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   apiCall();
-  //   // console.log('hello G');
-  //   // unsplash.search
-  //   //   .photos('hairstyles men', 2, 20)
-  //   //   .then(toJson)
-  //   //   .then((json) => {
-  //   //     setPics(json.results);
-  //   //     console.log(json.results);
-  //   //   });
-  // }, []);
+  useEffect(() => {
+    apiCall();
+  }, []);
 
   return (
-    <View style={styles.screen}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Icon
-          style={{ margin: 10 }}
-          name="bars"
-          size={28}
-          color={colors.dark}
-          onPress={() => props.navigation.toggleDrawer()}
-        />
-        <IonIcon
-          style={{ margin: 10, alignItems: 'flex-end' }}
-          name="filter"
-          size={28}
-          color={colors.dark}
-          onPress={() => props.navigation.toggleDrawer()}
-        />
-      </View>
-      <Text style={{ fontSize: 26, marginTop: -12, textAlign: 'center' }}>
+    <ScrollView style={styles.screen}>
+      <Icon
+        style={{
+          position: 'absolute',
+          top: 10,
+          left: 10,
+        }}
+        name="bars"
+        size={28}
+        color={colors.dark}
+        onPress={() => props.navigation.toggleDrawer()}
+      />
+      <IonIcon
+        style={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+        }}
+        name="filter"
+        size={28}
+        color={colors.dark}
+        onPress={() => props.navigation.toggleDrawer()}
+      />
+      <Text
+        style={{ fontSize: 25, marginTop: height * 0.05, textAlign: 'center' }}>
         Find and Book best Services
       </Text>
       <View style={styles.textInput}>
@@ -159,15 +111,20 @@ export default function HomeScreen(props) {
           style={{ flex: 1 }}
           maxLength={50}
           onChangeText={(text) => setSearch(text)}
-          value={isSearch}
+          value={search}
         />
-        <Icon name="search1" color={colors.red} size={25} />
+        <Icon
+          name="search1"
+          color={colors.red}
+          size={30}
+          onPress={() => console.log('searched' + search)}
+        />
       </View>
       <Text style={{ fontSize: 22, marginLeft: 20, marginTop: 5 }}>
         Best Salon
       </Text>
       <FlatList
-        style={{ height: '35%' }}
+        style={{ height: height * 0.315 }}
         horizontal={true}
         contentContainerStyle={{ paddingHorizontal: 5 }}
         showsVerticalScrollIndicator={false}
@@ -195,16 +152,16 @@ export default function HomeScreen(props) {
           Latest Styles
         </Text>
         <FlatList
-          style={{ height: '35%' }}
+          style={{ height: height * 0.31 }}
           horizontal={true}
           contentContainerStyle={{ paddingHorizontal: 5 }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          data={photos}
+          data={pics}
           keyExtractor={(photo) => photo.id.toString()}
           renderItem={({ item, index }) => (
             <PhotoCard
-              image={item.uri}
+              image={item.small}
               onPress={() => {
                 setIsVisible(true);
                 setImageIndex(index);
@@ -213,13 +170,13 @@ export default function HomeScreen(props) {
           )}
         />
         <ImageView
-          images={photos}
+          images={pics}
           imageIndex={imageIndex}
           visible={visible}
           onRequestClose={() => setIsVisible(false)}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

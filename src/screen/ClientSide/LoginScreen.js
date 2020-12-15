@@ -45,14 +45,14 @@ function LoginScreen(props) {
           secureTextEntry={true}
           value={password}
         />
-        <TouchableOpacity onPress={() => props.navigation.navigate('')}>
+        <TouchableOpacity onPress={() => props.navigation.navigate('Forget')}>
           <Text style={styles.textforget}>Forget Password?</Text>
         </TouchableOpacity>
         <LinearGradient
           colors={[colors.orange, colors.red]}
           style={[styles.button]}>
           <TouchableOpacity
-            style={{width: '100%', alignItems: 'center'}}
+            style={{ width: '100%', alignItems: 'center' }}
             onPress={() => props.navigation.navigate('MainApp')}>
             <Text style={styles.textBtn}>Sign In</Text>
           </TouchableOpacity>
