@@ -178,7 +178,7 @@ const packagesArr = [
   },
 ];
 
-const ServicesSelectionScreen = () => {
+const ServicesSelectionScreen = (props) => {
   const [hair, setHair] = useState(0);
   const [shave, setShave] = useState(0);
   const [styling, setStyling] = useState(0);
@@ -465,7 +465,7 @@ const ServicesSelectionScreen = () => {
             style={[styles.button]}>
             <TouchableOpacity
               onPress={() => {
-                console.log('hi');
+                props.navigation.navigate('Select Time');
               }}>
               <Text style={styles.textBtn}>Continue</Text>
             </TouchableOpacity>

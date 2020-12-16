@@ -92,7 +92,7 @@ export default function HomeScreen(props) {
         color={colors.dark}
         onPress={() => props.navigation.toggleDrawer()}
       />
-      <IonIcon
+      {/* <IonIcon
         style={{
           position: 'absolute',
           top: 10,
@@ -102,7 +102,7 @@ export default function HomeScreen(props) {
         size={28}
         color={colors.dark}
         onPress={() => props.navigation.toggleDrawer()}
-      />
+      /> */}
       <View style={{ marginTop: height * 0.05 }}>
         <Text
           style={{
