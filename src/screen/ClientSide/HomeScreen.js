@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Dimensions,
   FlatList,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -102,79 +103,87 @@ export default function HomeScreen(props) {
         color={colors.dark}
         onPress={() => props.navigation.toggleDrawer()}
       />
-      <Text
-        style={{ fontSize: 25, marginTop: height * 0.05, textAlign: 'center' }}>
-        Find and Book best Services
-      </Text>
-      <View style={styles.textInput}>
-        <TextInput
-          style={{ flex: 1 }}
-          maxLength={50}
-          onChangeText={(text) => setSearch(text)}
-          value={search}
-        />
-        <Icon
-          name="search1"
-          color={colors.red}
-          size={30}
-          onPress={() => console.log('searched' + search)}
-        />
-      </View>
-      <Text style={{ fontSize: 22, marginLeft: 20, marginTop: 5 }}>
-        Best Salon
-      </Text>
-      <FlatList
-        style={{ height: height * 0.315 }}
-        horizontal={true}
-        contentContainerStyle={{ paddingHorizontal: 5 }}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        data={salons}
-        keyExtractor={(salon) => salon.id.toString()}
-        renderItem={({ item }) => (
-          <SalonCard
-            title={item.name}
-            subTitle={item.address}
-            rating={item.rating}
-            image={item.image}
-            onPress={() => props.navigation.navigate('Salon Profile')}
-          />
-        )}
-      />
-      <View style={{ backgroundColor: colors.dark2 }}>
+      <View style={{ marginTop: height * 0.05 }}>
         <Text
           style={{
-            fontSize: 22,
-            marginLeft: 20,
-            marginTop: 10,
-            color: colors.white,
+            fontSize: 25,
+
+            textAlign: 'center',
           }}>
-          Latest Styles
+          Find and Book best Services
+        </Text>
+        <View style={styles.textInput}>
+          <TextInput
+            style={{ flex: 1 }}
+            maxLength={50}
+            onChangeText={(text) => setSearch(text)}
+            value={search}
+          />
+          <Icon
+            name="search1"
+            color={colors.red}
+            size={30}
+            onPress={() => props.navigation.navigate('Search')}
+          />
+        </View>
+      </View>
+      <View>
+        <Text style={{ fontSize: 22, marginLeft: 20, marginTop: 5 }}>
+          Best Salon
         </Text>
         <FlatList
-          style={{ height: height * 0.31 }}
+          style={{ height: height * 0.315 }}
           horizontal={true}
           contentContainerStyle={{ paddingHorizontal: 5 }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          data={pics}
-          keyExtractor={(photo) => photo.id.toString()}
-          renderItem={({ item, index }) => (
-            <PhotoCard
-              image={item.small}
-              onPress={() => {
-                setIsVisible(true);
-                setImageIndex(index);
-              }}
+          data={salons}
+          keyExtractor={(salon) => salon.id.toString()}
+          renderItem={({ item }) => (
+            <SalonCard
+              title={item.name}
+              subTitle={item.address}
+              rating={item.rating}
+              image={item.image}
+              onPress={() => props.navigation.navigate('Salon Profile')}
             />
           )}
         />
-        <ImageView
-          images={pics}
-          imageIndex={imageIndex}
-          visible={visible}
-          onRequestClose={() => setIsVisible(false)}
-        />
+        <View style={{ backgroundColor: colors.dark2 }}>
+          <Text
+            style={{
+              fontSize: 22,
+              marginLeft: 20,
+              marginTop: 10,
+              color: colors.white,
+            }}>
+            Latest Styles
+          </Text>
+          <FlatList
+            style={{ height: height * 0.31 }}
+            horizontal={true}
+            contentContainerStyle={{ paddingHorizontal: 5 }}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={pics}
+            keyExtractor={(photo) => photo.id.toString()}
+            renderItem={({ item, index }) => (
+              <PhotoCard
+                image={item.small}
+                onPress={() => {
+                  setIsVisible(true);
+                  setImageIndex(index);
+                }}
+              />
+            )}
+          />
+          <ImageView
+            images={pics}
+            imageIndex={imageIndex}
+            visible={visible}
+            onRequestClose={() => setIsVisible(false)}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -202,5 +211,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.red,
     backgroundColor: colors.white,
+  },
+  mapContainer: {
+    // ...StyleSheet.absoluteFillObject,
+    height: 400,
+    width: '100%',
+    marginTop: -10,
+    zIndex: -1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
 });

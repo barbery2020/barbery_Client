@@ -1,21 +1,12 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  TouchableHighlight,
-} from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Rating } from 'react-native-ratings';
 
 import colors from '../styles/colors';
 
 export default function SalonCard({ image, title, subTitle, rating, onPress }) {
   return (
-    <TouchableHighlight
-      style={styles.screen}
-      underlayColor={colors.light}
-      onPress={onPress}>
+    <TouchableOpacity style={styles.screen} onPress={onPress}>
       <View style={styles.card}>
         <Image style={styles.image} source={image} />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -41,7 +32,7 @@ export default function SalonCard({ image, title, subTitle, rating, onPress }) {
           </View>
         </View>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 }
 
@@ -50,7 +41,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    // backgroundColor: colors.dark,
   },
   card: {
     height: '92%',

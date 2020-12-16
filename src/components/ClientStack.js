@@ -11,6 +11,7 @@ import Icons from 'react-native-vector-icons/AntDesign';
 import colors from '../styles/colors';
 
 import HomeScreen from '../screen/ClientSide/HomeScreen';
+import SearchMapsScreen from '../screen/ClientSide/SearchMapsScreen';
 import ProfileScreen from '../screen/ClientSide/ProfileScreen';
 import SalonProfileScreen from '../screen/ClientSide/SalonProfileScreen';
 import ServicesScreen from '../screen/ClientSide/ServicesListScreen';
@@ -23,7 +24,6 @@ import ChatScreen from '../screen/others/ChatScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
-// const Tab = createBottomTabNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 export default class ClientStack extends Component {
@@ -115,20 +115,21 @@ export default class ClientStack extends Component {
         }}
       />
       <Stack.Screen
+        name="Search"
+        component={SearchMapsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="Salon Profile"
         component={SalonProfileScreen}
         options={{
-          // headerTintColor: colors.white,
-          // headerShown: true,
-          // headerTransparent: true,
           headerShown: false,
         }}
-        // options={{
-        //   headerShown: false,
-        // }}
       />
       <Stack.Screen
-        name="Services Selection Screen"
+        name="Select Services"
         component={ServicesSelectionScreen}
         options={{
           headerStyle: { backgroundColor: colors.red },
@@ -136,7 +137,7 @@ export default class ClientStack extends Component {
         }}
       />
       <Stack.Screen
-        name="Services Screen"
+        name="Services and Packages"
         component={ServicesScreen}
         options={{
           headerStyle: { backgroundColor: colors.red },
@@ -144,7 +145,7 @@ export default class ClientStack extends Component {
         }}
       />
       <Stack.Screen
-        name="Specialist Details Screen"
+        name="Specialist"
         component={SpecialistDetailsScreen}
         options={{
           headerStyle: { backgroundColor: colors.red },
@@ -152,7 +153,7 @@ export default class ClientStack extends Component {
         }}
       />
       <Stack.Screen
-        name="Gallery Screen"
+        name="Gallery"
         component={GalleryScreen}
         options={{
           headerStyle: { backgroundColor: colors.red },

@@ -200,21 +200,19 @@ export default function SalonProfileScreen(props) {
         }}>
         <TouchableOpacity
           style={{ alignItems: 'center' }}
-          onPress={() => props.navigation.navigate('Gallery Screen')}>
+          onPress={() => props.navigation.navigate('Gallery')}>
           <Ant name="picture" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Gallery</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{ alignItems: 'center' }}
-          onPress={() => props.navigation.navigate('Services Screen')}>
+          onPress={() => props.navigation.navigate('Services and Packages')}>
           <Ant name="appstore-o" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Services</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{ alignItems: 'center' }}
-          onPress={() =>
-            props.navigation.navigate('Services Selection Screen')
-          }>
+          onPress={() => props.navigation.navigate('Select Services')}>
           <Ant name="clockcircleo" size={30} color={colors.red} />
           <Text style={{ fontSize: 12, color: colors.red }}>Booking</Text>
         </TouchableOpacity>
