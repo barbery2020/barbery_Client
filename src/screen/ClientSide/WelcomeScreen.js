@@ -1,33 +1,27 @@
-import React from 'react';
-import {
-  ImageBackground,
-  Button,
-  StyleSheet,
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import React, { useEffect } from 'react';
+import { ImageBackground, StyleSheet, View, Image } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
 import colors from '../../styles/colors';
+import { connect } from 'react-redux';
 
-function WelcomeScreen(props) {
+function WelcomeScreen({ navigation: { navigate }, token }) {
   const [isLoading, setLoading] = React.useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (token) {
+        navigate('MainApp');
+      } else {
+        navigate('Login');
+      }
+    }, 3000);
+
+    return () => {};
+  }, [token]);
 
   return (
     <View style={styles.container}>
-      {/* {isLoading
-      ? <View style={styles.activity}>
-          <ActivityIndicator
-            size="large"
-            color={colors.red}
-            animating={isLoading}
-          />
-        </View>
-      :  */}
       <ImageBackground
         blurRadius={2}
         style={styles.background}
@@ -38,18 +32,6 @@ function WelcomeScreen(props) {
             style={styles.logo}
             source={require('../../assets/icons/barbery-W.png')}
           />
-        </Animatable.View>
-
-        <Animatable.View animation="fadeInUp" style={styles.buttonsContainer}>
-          <LinearGradient
-            colors={[colors.orange, colors.red]}
-            style={[styles.button]}>
-            <TouchableOpacity
-              style={{width: '100%', alignItems: 'center'}}
-              onPress={() => props.navigation.navigate('Login')}>
-              <Text style={styles.textBtn}>Login</Text>
-            </TouchableOpacity>
-          </LinearGradient>
         </Animatable.View>
       </ImageBackground>
       {/* } */}
@@ -103,4 +85,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WelcomeScreen;
+const mapStateToProps = ({ user: { token } }) => ({ token });
+
+export default connect(mapStateToProps)(WelcomeScreen);
