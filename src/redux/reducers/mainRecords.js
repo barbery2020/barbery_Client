@@ -2,8 +2,6 @@ import {
   SET_CURRENT_USER,
   SET_UPDATE_LOADING,
   UPDATE_CURRENT_USER,
-  GET_RECORDS,
-  UPDATE_RECORDS,
   LOGOUT,
 } from '../types';
 

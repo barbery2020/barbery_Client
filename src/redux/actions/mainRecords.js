@@ -14,6 +14,7 @@ export const getUser = () => async (dispatch) => {
     const res = await axios.get('/auth');
     console.log('object 2222222222222');
     dispatch({ type: SET_CURRENT_USER, payload: res.data });
+    console.log('object 3333333333333', res.data);
   } catch (err) {
     console.log('object', err.response.data);
     dispatch({ type: SET_UPDATE_LOADING, payload: false });

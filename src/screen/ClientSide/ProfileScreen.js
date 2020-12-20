@@ -25,6 +25,7 @@ import { getUser, updateUser } from '../../redux/actions/mainRecords';
 function ProfileScreen({
   navigation: { goBack, navigate },
   user,
+  getUser,
   updateUser,
   loading,
   logout,
@@ -32,10 +33,23 @@ function ProfileScreen({
   useEffect(() => {
     if (!user) {
       getUser();
-      console.log(user);
     }
     return () => {};
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.firstName);
+      setLastName(user.lastName);
+      setEmail(user.email);
+      setPhone(user.phoneNo);
+      setImage(
+        user?.image
+          ? `data:${user?.image?.type};base64,${user?.image?.data}`
+          : profileImg.img,
+      );
+    }
+  }, [user]);
 
   const [apiMage, setApiMage] = useState({});
   const [image, setImage] = useState(
