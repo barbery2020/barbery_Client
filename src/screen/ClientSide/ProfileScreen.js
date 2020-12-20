@@ -11,33 +11,54 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePicker from 'react-native-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import colors from '../../styles/colors';
 import profileImg from '../../utils/profileImg';
+import LoadingIndicator from '../../components/LoadingIndicator';
 
-function ProfileScreen() {
-  // const [image, setImage] = useState(profileImg.img);
-  // const [firstName, setFirstName] = useState('Ahmed');
-  // const [lastName, setLastName] = useState('Raza');
-  // const [email, setEmail] = useState('ahmedraza1@gmail.com');
-  // const [phone, setPhone] = useState('+923167512234');
-  // const [password, setPassword] = useState('12345raza');
+import { connect } from 'react-redux';
+import { logout } from '../../redux/actions/user';
+import { getUser, updateUser } from '../../redux/actions/mainRecords';
+
+function ProfileScreen({
+  navigation: { goBack, navigate },
+  user,
+  updateUser,
+  loading,
+  logout,
+}) {
+  useEffect(() => {
+    if (!user) {
+      getUser();
+      console.log(user);
+    }
+    return () => {};
+  }, []);
+
+  const [apiMage, setApiMage] = useState({});
+  const [image, setImage] = useState(
+    user?.image
+      ? `data:${user?.image?.type};base64,${user?.image?.data}`
+      : profileImg.img,
+  );
+  const [firstName, setFirstName] = useState(user?.firstName || '');
+  const [lastName, setLastName] = useState(user?.lastName);
+  const [email, setEmail] = useState(user?.email);
+  const [phone, setPhone] = useState(user?.phoneNo);
+
   const [isChange, setChange] = useState(false);
 
-  const [form, setForm] = useState({
-    firstName: 'Ahmed',
-    lastName: 'Raza',
-    email: 'ahmedraza1@gmail.com',
-    phone: '+923167512234',
-    password: '12345raza',
-    image: profileImg.img,
-  });
-
-  const { firstName, lastName, email, phone, password, image } = form;
-
-  const onChange = (text, name) => {
-    setForm({ ...form, [name]: text });
+  const update = () => {
+    const updateCurrentUser = {
+      image: apiMage,
+      firstName,
+      lastName,
+      email,
+      phoneNo: phone,
+    };
+    updateUser(updateCurrentUser);
   };
 
   const selectFile = () => {
@@ -55,9 +76,9 @@ function ProfileScreen() {
       } else if (res.error) {
         console.log('ImagePicker Error: ', res.error);
       } else {
+        setApiMage({ type: res.type, data: res.data });
         const uri = `data:${res.type};base64,${res.data}`;
-        // setImage(uri);
-        onChange(uri, 'image');
+        setImage(uri);
         setChange(true);
       }
     });
@@ -65,86 +86,93 @@ function ProfileScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity style={styles.imageContainer} onPress={selectFile}>
-        <Image style={styles.profileImage} source={{ uri: image }} />
-      </TouchableOpacity>
-      <View style={styles.profileData}>
-        <View style={styles.row}>
-          <View style={styles.rowInput}>
-            <Text style={styles.text}>First Name</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder={'Ahmed'}
-              maxLength={50}
-              onChangeText={(text) => {
-                onChange(text, 'firstName');
-                setChange(true);
-              }}
-              value={firstName}
-            />
+      {loading && <LoadingIndicator />}
+      <View style={{ width: '100%', height: '100%' }}>
+        <TouchableOpacity style={styles.imageContainer} onPress={selectFile}>
+          <Image style={styles.profileImage} source={{ uri: image }} />
+        </TouchableOpacity>
+        <View style={styles.profileData}>
+          <View style={styles.row}>
+            <View style={styles.rowInput}>
+              <Text style={styles.text}>First Name</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder={'Ahmed'}
+                maxLength={50}
+                onChangeText={(text) => {
+                  setFirstName(text);
+                  setChange(true);
+                }}
+                value={firstName}
+              />
+            </View>
+            <View style={styles.rowInput}>
+              <Text style={styles.text}>Last Name</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder={'Raza'}
+                maxLength={50}
+                onChangeText={(text) => {
+                  setLastName(text);
+                  setChange(true);
+                }}
+                value={lastName}
+              />
+            </View>
           </View>
-          <View style={styles.rowInput}>
-            <Text style={styles.text}>Last Name</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder={'Raza'}
-              maxLength={50}
-              onChangeText={(text) => {
-                onChange(text, 'lastName');
-                setChange(true);
-              }}
-              value={lastName}
-            />
-          </View>
-        </View>
-        <Text style={styles.text}>Email</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder={'e.g. abc@gmail.com'}
-          maxLength={50}
-          onChangeText={(text) => {
-            onChange(text, 'email');
-            setChange(true);
-          }}
-          value={email}
-        />
-        <Text style={styles.text}>Phone no.</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder={'+92'}
-          keyboardType={'numeric'}
-          maxLength={13}
-          minLength={11}
-          onChangeText={(text) => {
-            onChange(text, 'phone');
-            setChange(true);
-          }}
-          value={phone}
-        />
-        <Text style={styles.text}>Password</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder={'***'}
-          maxLength={20}
-          onChangeText={(text) => {
-            onChange(text, 'password');
-            setChange(true);
-          }}
-          secureTextEntry={true}
-          value={password}
-        />
+          <Text style={styles.text}>Email</Text>
+          <TextInput
+            style={styles.textInput}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            placeholder={'e.g. abc@gmail.com'}
+            maxLength={50}
+            onChangeText={(text) => {
+              setEmail(text);
+              setChange(true);
+            }}
+            value={email}
+          />
+          <Text style={styles.text}>Phone no.</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder={'+92'}
+            keyboardType={'phone-pad'}
+            maxLength={13}
+            minLength={11}
+            onChangeText={(text) => {
+              setPhone(text);
+              setChange(true);
+            }}
+            value={phone}
+          />
 
-        {isChange && (
+          {isChange && (
+            <LinearGradient
+              colors={[colors.orange, colors.red]}
+              style={styles.button}>
+              <TouchableOpacity
+                style={{ width: '100%', alignItems: 'center' }}
+                onPress={update}>
+                <Text style={styles.textBtn}>Save</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          )}
+
           <LinearGradient
             colors={[colors.orange, colors.red]}
             style={styles.button}>
             <TouchableOpacity
               style={{ width: '100%', alignItems: 'center' }}
-              onPress={() => alert('Profile is updated.')}>
-              <Text style={styles.textBtn}>Save</Text>
+              onPress={() => {
+                logout();
+                AsyncStorage.removeItem('@Token');
+                navigate('Welcome');
+              }}>
+              <Text style={styles.textBtn}>Logout</Text>
             </TouchableOpacity>
           </LinearGradient>
-        )}
+        </View>
       </View>
     </ScrollView>
   );
@@ -177,6 +205,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignItems: 'center',
+    marginHorizontal: 100,
   },
   profileImage: {
     height: 160,
@@ -242,4 +271,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileScreen;
+const mapStateToProps = ({ mainRecords: { user, loading } }) => ({
+  user,
+  loading,
+});
+
+const mapActionToProps = { getUser, updateUser, logout };
+
+export default connect(mapStateToProps, mapActionToProps)(ProfileScreen);

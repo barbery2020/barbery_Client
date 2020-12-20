@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from '@react-native-async-storage/async-storage';
 import user from './reducers/user';
-// import mainRecords from './reducers/mainRecords';
+import mainRecords from './reducers/mainRecords';
 // import serviceReducer from './reducers/serviceReducer';
 // import packageReducer from './reducers/packageReducer';
 // import specialistReducer from './reducers/specialistReducer';
@@ -17,7 +17,7 @@ const config = {
 
 const rootReducer = combineReducers({
   user,
-  // mainRecords,
+  mainRecords,
   // serviceReducer,
   // packageReducer,
   // specialistReducer,

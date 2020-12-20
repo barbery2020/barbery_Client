@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   TextInput,
@@ -11,13 +11,25 @@ import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 
 import colors from '../../styles/colors';
+import LoadingIndicator from '../../components/LoadingIndicator';
 
-function LoginScreen(props) {
-  const [email, setEmail] = React.useState('ahmedraza1@gmail.com');
-  const [password, setPassword] = React.useState('raza1234');
+import { connect } from 'react-redux';
+import { login } from '../../redux/actions/user';
+
+function LoginScreen({ navigation: { navigate }, token, loading, login }) {
+  const [email, setEmail] = useState('tuseeq1@gmail.com');
+  const [password, setPassword] = useState('123456');
+
+  useEffect(() => {
+    if (token) {
+      navigate('MainApp');
+    }
+    return () => {};
+  }, [token]);
 
   return (
     <View style={styles.container}>
+      {loading && <LoadingIndicator />}
       <LinearGradient
         colors={[colors.orange, colors.red]}
         style={styles.header}>
@@ -31,6 +43,8 @@ function LoginScreen(props) {
         <Text style={styles.text}>Email</Text>
         <TextInput
           style={styles.textInput}
+          autoCapitalize="none"
+          keyboardType="email-address"
           placeholder={'e.g. abc@gmail.com'}
           maxLength={50}
           onChangeText={(text) => setEmail(text)}
@@ -45,7 +59,7 @@ function LoginScreen(props) {
           secureTextEntry={true}
           value={password}
         />
-        <TouchableOpacity onPress={() => props.navigation.navigate('Forget')}>
+        <TouchableOpacity onPress={() => navigate('Forget')}>
           <Text style={styles.textforget}>Forget Password?</Text>
         </TouchableOpacity>
         <LinearGradient
@@ -53,7 +67,9 @@ function LoginScreen(props) {
           style={[styles.button]}>
           <TouchableOpacity
             style={{ width: '100%', alignItems: 'center' }}
-            onPress={() => props.navigation.navigate('MainApp')}>
+            onPress={() => {
+              login({ email, password });
+            }}>
             <Text style={styles.textBtn}>Sign In</Text>
           </TouchableOpacity>
         </LinearGradient>
@@ -66,7 +82,7 @@ function LoginScreen(props) {
               borderWidth: 1,
             },
           ]}
-          onPress={() => props.navigation.navigate('Register')}>
+          onPress={() => navigate('Register')}>
           <Text style={styles.textBtnSignUp}>Sign Up</Text>
         </TouchableOpacity>
       </Animatable.View>
@@ -159,4 +175,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+const mapStateToProps = ({ user: { token, loading } }) => ({ token, loading });
+
+const mapActionToProps = { login };
+
+export default connect(mapStateToProps, mapActionToProps)(LoginScreen);

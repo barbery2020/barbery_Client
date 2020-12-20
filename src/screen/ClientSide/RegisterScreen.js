@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   TextInput,
@@ -10,18 +10,29 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 
+import LoadingIndicator from '../../components/LoadingIndicator';
 import colors from '../../styles/colors';
+import { connect } from 'react-redux';
+import { signup } from '../../redux/actions/user';
 
-function RegisterScreen(props) {
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [phone, setPhone] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [conPassword, setConPassword] = React.useState('');
+function RegisterScreen({ navigation: { navigate }, token, loading, signup }) {
+  const [firstName, setFirstName] = useState('Ahmed');
+  const [lastName, setLastName] = useState('Raza');
+  const [email, setEmail] = useState('tuseeq1@gmail.com');
+  const [phone, setPhone] = useState('+923164512345');
+  const [password, setPassword] = useState('123456');
+  const [conPassword, setConPassword] = useState('123456');
+
+  useEffect(() => {
+    if (token) {
+      navigate('MainApp');
+    }
+    return () => {};
+  }, [token]);
 
   return (
     <View style={styles.container}>
+      {loading && <LoadingIndicator />}
       <LinearGradient
         colors={[colors.orange, colors.red]}
         style={styles.header}>
@@ -56,6 +67,8 @@ function RegisterScreen(props) {
         <Text style={styles.text}>Email</Text>
         <TextInput
           style={styles.textInput}
+          autoCapitalize="none"
+          keyboardType="email-address"
           placeholder={'e.g. abc@gmail.com'}
           maxLength={50}
           onChangeText={(text) => setEmail(text)}
@@ -65,7 +78,7 @@ function RegisterScreen(props) {
         <TextInput
           style={styles.textInput}
           placeholder={'+92'}
-          keyboardType={'numeric'}
+          keyboardType={'phone-pad'}
           maxLength={13}
           minLength={11}
           onChangeText={(text) => setPhone(text)}
@@ -97,7 +110,9 @@ function RegisterScreen(props) {
               width: '100%',
               alignItems: 'center',
             }}
-            onPress={() => props.navigation.navigate('MainApp')}>
+            onPress={() =>
+              signup({ firstName, lastName, email, phoneNo: phone, password })
+            }>
             <Text style={styles.textBtn}>Register</Text>
           </TouchableOpacity>
         </LinearGradient>
@@ -177,4 +192,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
+const mapStateToProps = ({ user: { token, loading } }) => ({ token, loading });
+
+const mapActionToProps = { signup };
+
+export default connect(mapStateToProps, mapActionToProps)(RegisterScreen);
