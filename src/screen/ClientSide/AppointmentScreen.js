@@ -162,15 +162,12 @@ export default function AppointmentScreen(props) {
       console.log(res.data);
       setAppointments(
         res.data.map((SS) => ({
-          title: SS.firstName + ' ' + SS.lastName,
-          image: `data:${SS?.picture?.type};base64,${SS?.picture?.data}`,
+          title: SS?.specialist?.name,
+          image: `data:${SS?.specialist?.picture?.type};base64,${SS?.specialist?.picture?.data}`,
           status: SS.status,
           price: SS.bill,
           time: SS.date,
           id: SS._id,
-          barber: SS.barber,
-          user: SS.user,
-          specialist: SS.specialist,
         })),
       );
     });
@@ -244,13 +241,15 @@ export default function AppointmentScreen(props) {
         keyExtractor={(val, index) => index.toString()}
         renderItem={({ item }) => (
           <Card
-            title={item.name}
+            title={item.title}
             subTitle={'Rs. ' + item.price}
             time={item.time}
             status={item.status}
             image={item.image}
             selectedDate={isDate}
-            onPress={() => props.navigation.navigate('Appointment Details')}
+            onPress={() =>
+              props.navigation.navigate('Appointment Details', { item })
+            }
           />
         )}
       />

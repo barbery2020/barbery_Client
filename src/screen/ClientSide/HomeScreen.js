@@ -17,6 +17,7 @@ import axios from '../../../config';
 import SalonCard from '../../components/SalonCard';
 import PhotoCard from '../../components/PhotoCard';
 import colors from '../../styles/colors';
+import Axios from 'axios';
 
 const salons = [
   {
@@ -63,7 +64,7 @@ export default function HomeScreen(props) {
   )}&per_page=30&query=man-face&client_id=${clientID}`;
 
   const apiCall = async () => {
-    const res = await axios.get(url);
+    const res = await Axios.get(url);
 
     const photos = res.data?.results?.map(
       ({ id, urls: { regular, small } }) => ({
@@ -81,7 +82,7 @@ export default function HomeScreen(props) {
       axios.get('/saloon/allSaloons').then((res) => {
         console.log(res.data);
         setSaloons(
-          res.data.map((SS) => {
+          res.data?.map((SS) => {
             return {
               name: SS.firstName + ' ' + SS.lastName,
               address:

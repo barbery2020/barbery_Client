@@ -2,125 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from '../../../config';
 
 import ImageGalleryCard from '../../components/ImageGalleryCard';
 import colors from '../../styles/colors';
 
-const photos = [
-  {
-    id: 1,
-    uri: 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4',
-  },
-  {
-    id: 2,
-    uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-  },
-  {
-    id: 3,
-    uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-  },
-  {
-    id: 1,
-    uri: 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4',
-  },
-  {
-    id: 2,
-    uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-  },
-  {
-    id: 3,
-    uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-  },
-  {
-    id: 1,
-    uri: 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4',
-  },
-  {
-    id: 2,
-    uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-  },
-  {
-    id: 3,
-    uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-  },
-  {
-    id: 1,
-    uri: 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4',
-  },
-  {
-    id: 2,
-    uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-  },
-  {
-    id: 3,
-    uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-  },
-  {
-    id: 1,
-    uri: 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4',
-  },
-  {
-    id: 2,
-    uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-  },
-  {
-    id: 3,
-    uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-  },
-  {
-    id: 1,
-    uri: 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4',
-  },
-  {
-    id: 2,
-    uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-  },
-  {
-    id: 3,
-    uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-  },
-  {
-    id: 1,
-    uri: 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4',
-  },
-  {
-    id: 2,
-    uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-  },
-  {
-    id: 3,
-    uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-  },
-  {
-    id: 1,
-    uri: 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4',
-  },
-  {
-    id: 2,
-    uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-  },
-  {
-    id: 3,
-    uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-  },
-  {
-    id: 1,
-    uri: 'https://images.unsplash.com/photo-1571501679680-de32f1e7aad4',
-  },
-  {
-    id: 2,
-    uri: 'https://images.unsplash.com/photo-1573273787173-0eb81a833b34',
-  },
-  {
-    id: 3,
-    uri: 'https://images.unsplash.com/photo-1569569970363-df7b6160d111',
-  },
-];
-
-export default function GalleryScreen(props) {
+export default function GalleryScreen({ route: { params } }) {
   const [imageIndex, setImageIndex] = useState(0);
+  const [photos, setPhotos] = useState([]);
   const [visible, setIsVisible] = useState(false);
   const columns = 4;
+
+  const getGallery = async () => {
+    const res = await axios.get('/saloon/saloonCollections/' + params.id);
+
+    setPhotos(
+      res.data.map((val) => ({
+        id: val._id,
+        uri: `data:${val?.picture?.type};base64,${val?.picture?.data}`,
+      })),
+    );
+  };
+
+  useEffect(() => {
+    getGallery();
+    return () => {};
+  }, []);
 
   return (
     <View style={styles.screen}>

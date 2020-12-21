@@ -145,6 +145,8 @@ export default function SalonProfileScreen(props) {
             ? res.data.address.slice(0, 30) + '...'
             : res.data.address,
         rating: 5,
+        lat: Number(res?.data?.latitude),
+        long: Number(res?.data?.longitude),
         image: `data:${res.data?.image?.type};base64,${res.data?.image?.data}`,
       });
       console.log(salons);
@@ -174,7 +176,7 @@ export default function SalonProfileScreen(props) {
 
   const openGoogleMaps = () => {
     const scheme = 'geo:0,0?q=';
-    const url = scheme + `${getCoordinate.latitude},${getCoordinate.longitude}`;
+    const url = scheme + `${salons.lat},${salons.long}`;
     Linking.openURL(url);
   };
 
@@ -237,13 +239,19 @@ export default function SalonProfileScreen(props) {
         }}>
         <TouchableOpacity
           style={{ alignItems: 'center' }}
-          onPress={() => props.navigation.navigate('Gallery')}>
+          onPress={() =>
+            props.navigation.navigate('Gallery', { id: props.route.params.id })
+          }>
           <Ant name="picture" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Gallery</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{ alignItems: 'center' }}
-          onPress={() => props.navigation.navigate('Services and Packages')}>
+          onPress={() =>
+            props.navigation.navigate('Services and Packages', {
+              id: props.route.params.id,
+            })
+          }>
           <Ant name="appstore-o" size={30} color={colors.dark} />
           <Text style={styles.textBtn}>Services</Text>
         </TouchableOpacity>

@@ -18,7 +18,7 @@ import ReviewCard from '../../components/ReviewCard';
 import Separator from '../../components/Separator';
 import colors from '../../styles/colors';
 
-export default function AppointmentDetailScreen() {
+export default function AppointmentDetailScreen({ item }) {
   const [isCompleted, setCompleted] = React.useState(true);
   const [isReviewed, setReviewed] = React.useState(false);
   const [isReview, setReview] = React.useState('');
@@ -69,10 +69,10 @@ export default function AppointmentDetailScreen() {
   return (
     <ScrollView style={styles.screen}>
       <View style={styles.cardPerson}>
-        <Image style={styles.image} source={customer[0].image} />
+        <Image style={styles.image} source={item.image} />
         <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{customer[0].name}</Text>
-          <Text style={styles.time}>{customer[0].time}</Text>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.time}>{item.time}</Text>
         </View>
       </View>
       <View style={styles.servicesDetails}>
@@ -106,9 +106,9 @@ export default function AppointmentDetailScreen() {
         </View>
       </View>
       <View style={styles.cardPerson}>
-        <Image style={styles.image} source={customer[0].specialistImage} />
+        <Image style={styles.image} source={item.specialistImage} />
         <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{customer[0].specialist}</Text>
+          <Text style={styles.title}>{item.specialist}</Text>
           <Text style={styles.time}>specialist</Text>
         </View>
       </View>

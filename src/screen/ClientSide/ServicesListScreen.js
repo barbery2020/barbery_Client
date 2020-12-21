@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   FlatList,
@@ -11,117 +11,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 import Card from '../../components/Card';
 import colors from '../../styles/colors';
-
-const listings = [
-  {
-    id: 1,
-    title: 'Hair Cutting',
-    category: 'Hair Cut',
-    price: 200,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 2,
-    title: 'Trending Beard Dressing',
-    category: 'Shave',
-    price: 150,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_2.jpg'),
-  },
-  {
-    id: 3,
-    title: 'Hair Dressing',
-    category: 'Styling',
-    price: 170,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_3.jpg'),
-  },
-  {
-    id: 4,
-    title: 'Faded Hair Cut',
-    category: 'Hair Cut',
-    price: 200,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_9.jpg'),
-  },
-  {
-    id: 5,
-    title: 'Hair Cutting',
-    category: 'Hair Cut',
-    price: 200,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 6,
-    title: 'Trending Beard Dressing',
-    category: 'Shave',
-    price: 150,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_2.jpg'),
-  },
-  {
-    id: 7,
-    title: 'Hair Dressing',
-    category: 'Styling',
-    price: 170,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_3.jpg'),
-  },
-  {
-    id: 8,
-    title: 'Faded Hair Cut',
-    category: 'Hair Cut',
-    price: 200,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_9.jpg'),
-  },
-  {
-    id: 9,
-    title: 'Hair Cutting',
-    category: 'Hair Cut',
-    price: 200,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 10,
-    title: 'Trending Beard Dressing',
-    category: 'Shave',
-    price: 150,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_2.jpg'),
-  },
-  {
-    id: 11,
-    title: 'Hair Dressing',
-    category: 'Styling',
-    price: 170,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_3.jpg'),
-  },
-  {
-    id: 12,
-    title: 'Faded Hair Cut',
-    category: 'Hair Cut',
-    price: 200,
-    about:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    image: require('../../assets/images/image_9.jpg'),
-  },
-];
+import axios from '../../../config';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -131,15 +21,15 @@ function ServicesList(props) {
       <FlatList
         contentContainerStyle={{ paddingBottom: 15 }}
         style={styles.flatScreen}
-        data={listings}
-        keyExtractor={(listing) => listing.id.toString()}
+        data={props.listings}
+        keyExtractor={(listing) => listing._id.toString()}
         renderItem={({ item }) => (
           <Card
-            title={item.title}
-            subTitle={'Rs.' + item.price}
+            title={item.name}
+            subTitle={'Rs.' + item.cost}
             category={item.category}
-            about={item.about}
-            image={item.image}
+            about={item.description}
+            image={`data:${item?.picture?.type};base64,${item?.picture?.data}`}
           />
         )}
       />
@@ -153,15 +43,15 @@ function PackagesList(props) {
       <FlatList
         contentContainerStyle={{ paddingBottom: 15 }}
         style={styles.flatScreen}
-        data={listings}
-        keyExtractor={(listing) => listing.id.toString()}
+        data={props.listings}
+        keyExtractor={(listing) => listing._id.toString()}
         renderItem={({ item }) => (
           <Card
-            title={item.title}
-            subTitle={'Rs.' + item.price}
+            title={item.name}
+            subTitle={'Rs.' + item.cost}
             category={'Package Deal'}
-            about={item.about}
-            image={item.image}
+            about={item.description}
+            image={`data:${item?.picture?.type};base64,${item?.picture?.data}`}
           />
         )}
       />
@@ -169,7 +59,23 @@ function PackagesList(props) {
   );
 }
 
-function ServicesListScreen(props) {
+function ServicesListScreen({ route }) {
+  const [Services, setServices] = useState([]);
+  const [Packages, setPackages] = useState([]);
+
+  const getServices = async () => {
+    const res = await axios.get('/saloon/saloonServices/' + route.params.id);
+    setServices(res.data);
+  };
+  const getPackages = async () => {
+    const res = await axios.get('/saloon/saloonPackages/' + route.params.id);
+    setPackages(res.data);
+  };
+  useEffect(() => {
+    getServices();
+    getPackages();
+    return () => {};
+  }, []);
   return (
     <Tab.Navigator
       initialRouteName="Services"
@@ -182,18 +88,20 @@ function ServicesListScreen(props) {
       }}>
       <Tab.Screen
         name="Services"
-        component={ServicesList}
+        // component={ServicesList}
         options={{
           tabBarLabel: 'Services',
-        }}
-      />
+        }}>
+        {(props) => <ServicesList {...props} listings={Services} />}
+      </Tab.Screen>
       <Tab.Screen
         name="Packages"
-        component={PackagesList}
+        // component={PackagesList}
         options={{
           tabBarLabel: 'Packages',
-        }}
-      />
+        }}>
+        {(props) => <PackagesList {...props} listings={Packages} />}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }

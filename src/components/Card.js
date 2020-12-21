@@ -13,7 +13,7 @@ function Card({ title, subTitle, category, about, image }) {
   return (
     <View style={styles.screen}>
       <View style={styles.card}>
-        <Image style={styles.image} source={image} />
+        <Image style={styles.image} source={{ uri: image }} />
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{title}</Text>
           <View style={styles.subHeadings}>
