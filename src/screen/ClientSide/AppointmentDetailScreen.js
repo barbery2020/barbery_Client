@@ -14,6 +14,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import LinearGradient from 'react-native-linear-gradient';
 
+import LoadingIndicator from '../../components/LoadingIndicator';
 import ReviewCard from '../../components/ReviewCard';
 import Separator from '../../components/Separator';
 import colors from '../../styles/colors';
@@ -31,56 +32,19 @@ function AppointmentDetailScreen({
 }) {
   const [item, setItem] = React.useState(tem);
   console.log('item:', item);
-  const [isCompleted, setCompleted] = React.useState(true);
-  const [isReviewed, setReviewed] = React.useState(false);
   const [isReview, setReview] = React.useState('');
   const [isRating, setRating] = React.useState(0);
-
-  const customer = [
-    {
-      image: require('../../assets/images/image_1.jpg'),
-      name: 'Tuseeq Raza',
-      time: 'Oct 23, 2020 4:50 PM',
-      package: 'nill',
-      promo: 'nill',
-      specialist: 'Humza Jameel',
-      specialistImage: require('../../assets/images/image_3.jpg'),
-    },
-  ];
-  const services = [
-    {
-      id: 1,
-      service: 'hair cut',
-      price: 250,
-    },
-    {
-      id: 2,
-      service: 'shave',
-      price: 200,
-    },
-    {
-      id: 3,
-      service: "Men's service",
-      price: 400,
-    },
-  ];
-
-  const review = {
-    id: 1,
-    name: 'Tuseeq Raza',
-    rated: 4,
-    text:
-      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-    time: 'Oct 23, 2020 4:50 PM',
-  };
+  const [reviewLoading, setLoading] = React.useState(false);
 
   const saveReview = async () => {
     try {
+      setLoading(true);
       const res = await axios.post('/appointment/review/' + item?.id, {
         userReview: isReview,
         stars: isRating.toString(),
       });
       setItem({ ...item, review: res?.data });
+      setLoading(false);
     } catch (err) {
       console.log('kkkkkkkkkkkkkkkkkkkkkkk', err.response.data);
     }
@@ -92,116 +56,118 @@ function AppointmentDetailScreen({
   }, []);
 
   return (
-    <ScrollView style={styles.screen}>
-      <View style={styles.cardPerson}>
-        <Image
-          style={styles.image}
-          source={{
-            uri: `data:${user?.image?.type};base64,${user?.image?.data}`,
-          }}
-        />
-        <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{user?.firstName}</Text>
-          <Text style={styles.time}>{`${item?.time} / ${
-            item?.date?.split('T')[0]
-          }`}</Text>
-        </View>
-      </View>
-      <View style={styles.servicesDetails}>
-        <View style={styles.flatItemHeading}>
-          <Text style={styles.heading}>Services</Text>
-          <Text style={styles.heading}>Price</Text>
-        </View>
-        <SafeAreaView style={styles.card}>
-          <FlatList
-            style={styles.flatScreen}
-            data={item?.services}
-            keyExtractor={(service) => service._id.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.flatItem}>
-                <Text>{item?.name}</Text>
-                <Text>{item?.cost}</Text>
-              </View>
-            )}
-          />
-        </SafeAreaView>
-        <View style={{ paddingHorizontal: 25, paddingVertical: 10 }}>
-          <Separator />
-        </View>
-        <View style={styles.flatItem}>
-          <Text style={styles.heading}>Promo</Text>
-          <Text>-{item?.promo != 0 && item?.promo}</Text>
-        </View>
-        <View style={styles.flatItem}>
-          <Text style={styles.heading}>Total</Text>
-          <Text>{item?.bill}</Text>
-        </View>
-      </View>
-      <View style={styles.cardPerson}>
-        <Image style={styles.image} source={{ uri: item.image }} />
-        <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{item?.title}</Text>
-          <Text style={styles.time}>specialist</Text>
-        </View>
-      </View>
+    <>
+      {reviewLoading && <LoadingIndicator />}
 
-      {/* Review Card */}
-      {!item?.status && !item?.review && (
-        <View style={styles.reviewCard}>
-          <View style={{ paddingVertical: 30 }}>
+      <ScrollView style={styles.screen}>
+        <View style={styles.cardPerson}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: `data:${user?.image?.type};base64,${user?.image?.data}`,
+            }}
+          />
+          <View style={styles.detailsContainer}>
+            <Text style={styles.title}>{user?.firstName}</Text>
+            <Text style={styles.time}>{`${item?.time} / ${
+              item?.date?.split('T')[0]
+            }`}</Text>
+          </View>
+        </View>
+        <View style={styles.servicesDetails}>
+          <View style={styles.flatItemHeading}>
+            <Text style={styles.heading}>Services</Text>
+            <Text style={styles.heading}>Price</Text>
+          </View>
+          <SafeAreaView style={styles.card}>
+            <FlatList
+              style={styles.flatScreen}
+              data={item?.services}
+              keyExtractor={(service) => service._id.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.flatItem}>
+                  <Text>{item?.name}</Text>
+                  <Text>{item?.cost}</Text>
+                </View>
+              )}
+            />
+          </SafeAreaView>
+          <View style={{ paddingHorizontal: 25, paddingVertical: 10 }}>
             <Separator />
           </View>
-          <View style={styles.inputCard}>
-            <Rating
-              style={styles.rating}
-              imageSize={30}
-              ratingCount={5}
-              startingValue={isRating}
-              onFinishRating={(rating) => setRating(rating)}
-              // readonly={true}
-            />
-            <TextInput
-              style={styles.textInput}
-              multiline
-              numberOfLines={4}
-              maxLength={200}
-              onChangeText={(text) => {
-                setReview(text);
-              }}
-              value={isReview}
-            />
-            <LinearGradient
-              colors={[colors.orange, colors.red]}
-              style={styles.button}>
-              <TouchableOpacity
-                style={{ width: '100%', alignItems: 'center' }}
-                onPress={() => {
-                  alert('Profile is updated.');
-                  // setCompleted(true);
-                  // setReviewed(true);
-                  saveReview();
-                }}>
-                <Text style={styles.textBtn}>Save</Text>
-              </TouchableOpacity>
-            </LinearGradient>
+          <View style={styles.flatItem}>
+            <Text style={styles.heading}>Promo</Text>
+            <Text>-{item?.promo != 0 && item?.promo}</Text>
+          </View>
+          <View style={styles.flatItem}>
+            <Text style={styles.heading}>Total</Text>
+            <Text>{item?.bill}</Text>
           </View>
         </View>
-      )}
+        <View style={styles.cardPerson}>
+          <Image style={styles.image} source={{ uri: item.image }} />
+          <View style={styles.detailsContainer}>
+            <Text style={styles.title}>{item?.title}</Text>
+            <Text style={styles.time}>specialist</Text>
+          </View>
+        </View>
 
-      {item?.review && (
-        <View style={styles.reviewCard}>
-          <View style={{ paddingVertical: 30 }}>
-            <Separator />
+        {/* Review Card */}
+        {!item?.status && !item?.review && (
+          <View style={styles.reviewCard}>
+            <View style={{ paddingVertical: 30 }}>
+              <Separator />
+            </View>
+            <View style={styles.inputCard}>
+              <Rating
+                style={styles.rating}
+                imageSize={30}
+                ratingCount={5}
+                startingValue={isRating}
+                onFinishRating={(rating) => setRating(rating)}
+                // readonly={true}
+              />
+              <TextInput
+                style={styles.textInput}
+                multiline
+                numberOfLines={4}
+                maxLength={200}
+                onChangeText={(text) => {
+                  setReview(text);
+                }}
+                value={isReview}
+              />
+              <LinearGradient
+                colors={[colors.orange, colors.red]}
+                style={styles.button}>
+                <TouchableOpacity
+                  style={{ width: '100%', alignItems: 'center' }}
+                  onPress={() => {
+                    saveReview();
+                  }}>
+                  <Text style={styles.textBtn}>Save</Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
           </View>
-          <ReviewCard
-            title={user?.firstName}
-            time={item?.review?.date?.split('T')[0]}
-            text={item?.review?.userReview}
-            rated={Number(item?.review?.stars)}
-          />
-        </View>
-      )}
-    </ScrollView>
+        )}
+
+        {item?.review && (
+          <View style={styles.reviewCard}>
+            <View style={{ paddingVertical: 30 }}>
+              <Separator />
+            </View>
+            <ReviewCard
+              title={user?.firstName}
+              image={`data:${user?.image?.type};base64,${user?.image?.data}`}
+              time={item?.review?.date?.split('T')[0]}
+              text={item?.review?.userReview}
+              rated={Number(item?.review?.stars)}
+            />
+          </View>
+        )}
+      </ScrollView>
+    </>
   );
 }
 
