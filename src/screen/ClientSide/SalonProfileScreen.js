@@ -18,6 +18,7 @@ import Ant from 'react-native-vector-icons/AntDesign';
 import SpecialistCard from '../../components/SpecialistCard';
 import ReviewCard from '../../components/ReviewCard';
 import colors from '../../styles/colors';
+import axios from '../../../config';
 
 const salon = {
   id: 1,
@@ -124,12 +125,33 @@ const reviews = [
 ];
 
 export default function SalonProfileScreen(props) {
+  const [saloonSpecialists, setSaloonSpecialists] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [getCoordinate, setCoordinate] = useState({
     latitude: 33.656969,
     longitude: 73.153954,
     latitudeDelta: 0.001,
     longitudeDelta: 0.001,
   });
+  useEffect(() => {
+    axios
+      .get(`/saloon/saloonSpecialist/${props.route.params.id}`)
+      .then((res) => {
+        console.log(res.data);
+        setSaloonSpecialists(
+          res.data
+            .filter((SS) => SS.status)
+            .map((SS) => ({
+              title: SS.name,
+              image: {
+                uri: `data:${SS?.image?.type};base64,${SS?.image?.data}`,
+              },
+              id: SS._id,
+            })),
+        );
+      });
+  }, [props.route.params.id]);
+  useEffect(() => {});
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
@@ -212,7 +234,11 @@ export default function SalonProfileScreen(props) {
         </TouchableOpacity>
         <TouchableOpacity
           style={{ alignItems: 'center' }}
-          onPress={() => props.navigation.navigate('Select Services')}>
+          onPress={() =>
+            props.navigation.navigate('Select Services', {
+              id: props.route.params.id,
+            })
+          }>
           <Ant name="clockcircleo" size={30} color={colors.red} />
           <Text style={{ fontSize: 12, color: colors.red }}>Booking</Text>
         </TouchableOpacity>
@@ -237,8 +263,8 @@ export default function SalonProfileScreen(props) {
           contentContainerStyle={{ paddingHorizontal: 10 }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          data={listings}
-          keyExtractor={(listing) => listing.id.toString()}
+          data={saloonSpecialists}
+          keyExtractor={(listing) => listing.id}
           renderItem={({ item }) => (
             <SpecialistCard
               title={item.title}

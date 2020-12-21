@@ -29,6 +29,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import SpecialistTimeSelection from '../../components/SpecialistTimeSelection';
 
 import colors from '../../styles/colors';
+import axios from '../../../config';
 
 const slots = [
   {
@@ -141,17 +142,50 @@ const TimeSelectionScreen = (props) => {
   const [getId, setId] = useState(-1);
   const [getSlotId, setSlotId] = useState([]);
   const [modalVisibility, setModalVisibility] = useState(false);
+  const [saloonSpecialist, setSaloonSpecialists] = useState([]);
 
+  const bookAppointment = () => {
+    let payload = {
+      bill: 200,
+      timing: slots.find((s) => s.id == getSlotId)?.timing,
+      date: date,
+      services: Object.keys(props.route.params.selected).map(
+        (K) => props.route.params.selected[K],
+      ),
+      specialist: getId,
+      barber: props.route.params.id,
+    };
+    console.log(payload);
+    axios.post('/appointment', payload).then((res) => console.log(res.data));
+  };
+  useEffect(() => {
+    axios
+      .get(`/saloon/saloonSpecialist/${props.route.params.id}`)
+      .then((res) => {
+        console.log(res.data);
+        setSaloonSpecialists(
+          res.data
+            .filter((SS) => SS.status)
+            .map((SS) => ({
+              title: SS.name,
+              image: {
+                uri: `data:${SS?.image?.type};base64,${SS?.image?.data}`,
+              },
+              id: SS._id,
+              slots: slots.map((S) => ({
+                ...S,
+                available: parseInt(Math.random() * 10) % 3 == 0,
+              })),
+            })),
+        );
+      });
+  }, [props.route.params.id]);
   useEffect(() => {
     console.log(`from use effect ${getSlotId}`);
   }, [getSlotId]);
 
   const slotColorHandler = (id) => {
-    if (getSlotId.includes(id)) {
-      setSlotId(getSlotId.filter((item) => item !== id));
-      return;
-    }
-    setSlotId((ids) => [...ids, id]);
+    setSlotId((ids) => [id]);
   };
 
   const handleSpecialistSelection = (id) => {
@@ -227,7 +261,7 @@ const TimeSelectionScreen = (props) => {
           contentContainerStyle={{ paddingHorizontal: 10 }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          data={listings}
+          data={saloonSpecialist}
           keyExtractor={(listing) => listing.id.toString()}
           renderItem={({ item }) => (
             <SpecialistTimeSelection
@@ -259,55 +293,57 @@ const TimeSelectionScreen = (props) => {
             marginVertical: 5,
             flexWrap: 'wrap',
           }}>
-          {slots.map((slot, index) => (
-            <View
-              key={slot.id}
-              style={{
-                marginHorizontal: 10,
-                marginVertical: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <TouchableOpacity
-                disabled={slot.available === false ? true : false}
+          {(saloonSpecialist?.find((SS) => SS.id == getId)?.slots || slots).map(
+            (slot, index) => (
+              <View
+                key={slot.id}
                 style={{
-                  width: 110,
-                  borderWidth: 1,
-                  borderColor:
-                    slot.available === true ? colors.dark : colors.red,
-                  padding: 5,
-                  backgroundColor:
-                    slot.available === true
-                      ? getSlotId.includes(slot.id)
-                        ? colors.green
-                        : colors.white
-                      : colors.red,
-                  borderRadius: 5,
-                }}
-                onPress={() => {
-                  slotColorHandler(slot.id);
+                  marginHorizontal: 10,
+                  marginVertical: 5,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}>
-                <Text
+                <TouchableOpacity
+                  disabled={slot.available === false ? true : false}
                   style={{
-                    alignSelf: 'center',
-                    color:
+                    width: 110,
+                    borderWidth: 1,
+                    borderColor:
+                      slot.available === true ? colors.dark : colors.red,
+                    padding: 5,
+                    backgroundColor:
                       slot.available === true
                         ? getSlotId.includes(slot.id)
-                          ? colors.white
-                          : colors.dark
-                        : colors.white,
+                          ? colors.green
+                          : colors.white
+                        : colors.red,
+                    borderRadius: 5,
+                  }}
+                  onPress={() => {
+                    slotColorHandler(slot.id);
                   }}>
-                  {slot.timing}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+                  <Text
+                    style={{
+                      alignSelf: 'center',
+                      color:
+                        slot.available === true
+                          ? getSlotId.includes(slot.id)
+                            ? colors.white
+                            : colors.dark
+                          : colors.white,
+                    }}>
+                    {slot.timing}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ),
+          )}
         </View>
       </View>
       <View style={{ marginTop: height * 0.03, justifyContent: 'center' }}>
         <TouchableOpacity
           onPress={() => {
-            setModalVisibility(true);
+            bookAppointment();
           }}>
           <LinearGradient
             colors={[colors.orange, colors.red]}

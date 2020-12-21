@@ -10,7 +10,7 @@ function SpecialistCard({ title, image, onPress }) {
       underlayColor={colors.light}
       onPress={onPress}>
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <Image style={styles.card} source={image} />
+        <Image style={styles.card} resizeMode="contain" source={image} />
         <Text style={styles.title}>{title}</Text>
       </View>
     </TouchableOpacity>

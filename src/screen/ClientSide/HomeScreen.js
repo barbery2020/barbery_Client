@@ -12,7 +12,7 @@ import {
 import ImageView from 'react-native-image-viewing';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import axios from 'axios';
+import axios from '../../../config';
 
 import SalonCard from '../../components/SalonCard';
 import PhotoCard from '../../components/PhotoCard';
@@ -54,7 +54,7 @@ export default function HomeScreen(props) {
   const [visible, setIsVisible] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [pics, setPics] = useState([]);
-
+  const [saloons, setSaloons] = useState([]);
   const height = Math.round(Dimensions.get('window').height);
 
   const clientID = 'SB5406YTRMmCCW4wD6OxYv8RkMyjqeY0pxy9z7PMbD4';
@@ -77,6 +77,27 @@ export default function HomeScreen(props) {
 
   useEffect(() => {
     apiCall();
+    if (saloons.length === 0) {
+      axios.get('/saloon/allSaloons').then((res) => {
+        console.log(res.data);
+        setSaloons(
+          res.data.map((SS) => {
+            return {
+              name: SS.firstName + ' ' + SS.lastName,
+              address:
+                SS.address.length > 30
+                  ? SS.address.slice(0, 30) + '...'
+                  : SS.address,
+              rating: 5,
+              image: {
+                uri: `data:${SS?.image?.type};base64,${SS?.image?.data}`,
+              },
+              id: SS._id,
+            };
+          }),
+        );
+      });
+    }
   }, []);
 
   return (
@@ -137,15 +158,17 @@ export default function HomeScreen(props) {
           contentContainerStyle={{ paddingHorizontal: 5 }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          data={salons}
-          keyExtractor={(salon) => salon.id.toString()}
+          data={saloons}
+          keyExtractor={(salon, index) => index.toString()}
           renderItem={({ item }) => (
             <SalonCard
               title={item.name}
               subTitle={item.address}
               rating={item.rating}
               image={item.image}
-              onPress={() => props.navigation.navigate('Salon Profile')}
+              onPress={() =>
+                props.navigation.navigate('Salon Profile', { id: item.id })
+              }
             />
           )}
         />

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import axios from '../../../config';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { Picker } from '@react-native-picker/picker';
@@ -16,183 +17,102 @@ import colors from '../../styles/colors';
 
 import Separator from '../../components/Separator';
 
-const hairArr = [
-  {
-    name: 'select',
-    price: '0',
-    id: 1,
-  },
-  {
-    name: 'fauji cut',
-    price: '150',
-    id: 2,
-  },
-  {
-    name: 'spicy cut',
-    price: '200',
-    id: 3,
-  },
-];
-
-const shaveArr = [
-  {
-    name: 'select',
-    price: '0',
-    id: 1,
-  },
-  {
-    name: 'fauji cut',
-    price: '150',
-    id: 2,
-  },
-  {
-    name: 'spicy cut',
-    price: '200',
-    id: 3,
-  },
-];
-
-const stylingArr = [
-  {
-    name: 'select',
-    price: '0',
-    id: 1,
-  },
-  {
-    name: 'fauji cut',
-    price: '150',
-    id: 2,
-  },
-  {
-    name: 'spicy cut',
-    price: '200',
-    id: 3,
-  },
-];
-
-const hairColorArr = [
-  {
-    name: 'select',
-    price: '0',
-    id: 1,
-  },
-  {
-    name: 'fauji cut',
-    price: '150',
-    id: 2,
-  },
-  {
-    name: 'spicy cut',
-    price: '200',
-    id: 3,
-  },
-];
-
-const waxingArr = [
-  {
-    name: 'select',
-    price: '0',
-    id: 1,
-  },
-  {
-    name: 'fauji cut',
-    price: '150',
-    id: 2,
-  },
-  {
-    name: 'spicy cut',
-    price: '200',
-    id: 3,
-  },
-];
-
-const mensServicesArr = [
-  {
-    name: 'select',
-    price: '0',
-    id: 1,
-  },
-  {
-    name: 'fauji cut',
-    price: '150',
-    id: 2,
-  },
-  {
-    name: 'spicy cut',
-    price: '200',
-    id: 3,
-  },
-];
-
-const nailsArr = [
-  {
-    name: 'select',
-    price: '0',
-    id: 1,
-  },
-  {
-    name: 'fauji cut',
-    price: '150',
-    id: 2,
-  },
-  {
-    name: 'spicy cut',
-    price: '200',
-    id: 3,
-  },
-];
-
-const othersArr = [
-  {
-    name: 'select',
-    price: '0',
-    id: 1,
-  },
-  {
-    name: 'fauji cut',
-    price: '150',
-    id: 2,
-  },
-  {
-    name: 'spicy cut',
-    price: '200',
-    id: 3,
-  },
-];
-
-const packagesArr = [
-  {
-    name: 'select',
-    price: '0',
-    id: 1,
-  },
-  {
-    name: 'fauji cut',
-    price: '150',
-    id: 2,
-  },
-  {
-    name: 'spicy cut',
-    price: '200',
-    id: 3,
-  },
-];
-
 const ServicesSelectionScreen = (props) => {
-  const [hair, setHair] = useState(0);
-  const [shave, setShave] = useState(0);
-  const [styling, setStyling] = useState(0);
-  const [hairColor, setHairColor] = useState(0);
-  const [waxing, setWaxing] = useState(0);
-  const [menServices, setMenServices] = useState(0);
-  const [nails, setNails] = useState(0);
-  const [others, setOthers] = useState(0);
-  const [packages, setPackages] = useState(0);
   const [deviceHeight, setDeviceHeight] = useState(0);
+
+  const [hair, setHair] = useState(0);
+  const [selHair, setSelHair] = useState(0);
+  const [shave, setShave] = useState(0);
+  const [selShave, setSelShave] = useState(0);
+  const [styling, setStyling] = useState(0);
+  const [selStyling, setSelStyling] = useState(0);
+  const [hairColor, setHairColor] = useState(0);
+  const [selHairColor, setSelHairColor] = useState(0);
+  const [waxing, setWaxing] = useState(0);
+  const [selWaxing, setSelWaxing] = useState(0);
+  const [menServices, setMenServices] = useState(0);
+  const [selMenServices, setSelMenServices] = useState(0);
+  const [nails, setNails] = useState(0);
+  const [selNails, setSelNails] = useState(0);
+  const [others, setOthers] = useState(0);
+  const [selOther, setSelOthers] = useState(0);
+  const [packages, setPackages] = useState(0);
+  const [selPackages, setSelPackages] = useState(0);
+
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     setDeviceHeight(Math.round(Dimensions.get('window').height));
   }, []);
+
+  useEffect(() => {
+    //services
+    axios.get('/saloon/saloonServices/' + props.route.params.id).then((res) => {
+      setHair([
+        { _id: -1, name: 'Select', cost: 0 },
+        ...res.data.filter((SS) => SS.category == 'hair'),
+      ]);
+      setShave([
+        { _id: -1, name: 'Select', cost: 0 },
+        ...res.data.filter((SS) => SS.category == 'shaves'),
+      ]);
+      setStyling([
+        { _id: -1, name: 'Select', cost: 0 },
+        ...res.data.filter((SS) => SS.category == 'styling'),
+      ]);
+      setHairColor([
+        { _id: -1, name: 'Select', cost: 0 },
+        ...res.data.filter((SS) => SS.category == 'hairColor'),
+      ]);
+      setWaxing([
+        { _id: -1, name: 'Select', cost: 0 },
+        ...res.data.filter((SS) => SS.category == 'waxing'),
+      ]);
+      setMenServices([
+        { _id: -1, name: 'Select', cost: 0 },
+        ...res.data.filter((SS) => SS.category == 'menServices'),
+      ]);
+      setNails([
+        { _id: -1, name: 'Select', cost: 0 },
+        ...res.data.filter((SS) => SS.category == 'nails'),
+      ]);
+      setOthers([
+        { _id: -1, name: 'Select', cost: 0 },
+        ...res.data.filter((SS) => SS.category == 'other'),
+      ]);
+    });
+
+    //packages
+    axios.get('/saloon/saloonPackages/' + props.route.params.id).then((res) => {
+      // console.log(res.data);
+      setPackages([{ _id: -1, name: 'Select', cost: 0 }, ...res.data]);
+    });
+  }, [props.route.params.id]);
+
+  useEffect(() => {
+    const totalVal =
+      Number(hair ? hair[selHair].cost : 0) +
+      Number(shave ? shave[selShave].cost : 0) +
+      Number(styling ? styling[selStyling].cost : 0) +
+      Number(hairColor ? hairColor[selHairColor].cost : 0) +
+      Number(waxing ? waxing[selWaxing].cost : 0) +
+      Number(menServices ? menServices[selMenServices].cost : 0) +
+      Number(nails ? nails[selNails].cost : 0) +
+      Number(others ? others[selOther].cost : 0) +
+      Number(packages ? packages[selPackages].cost : 0);
+    setTotal(totalVal);
+    console.log('value updated', totalVal);
+  }, [
+    selHair,
+    selShave,
+    selStyling,
+    selHairColor,
+    selWaxing,
+    selMenServices,
+    selNails,
+    selOther,
+    selPackages,
+  ]);
 
   return (
     <ScrollView style={{ backgroundColor: colors.white }}>
@@ -208,17 +128,16 @@ const ServicesSelectionScreen = (props) => {
           Choose you service
         </Text>
         <Text style={{ fontSize: 16, color: colors.red, marginEnd: '5%' }}>
-          {`Total: ${
-            Number(hair) +
-            Number(shave) +
-            Number(styling) +
-            Number(hairColor) +
-            Number(waxing) +
-            Number(menServices) +
-            Number(nails) +
-            Number(others) +
-            Number(packages)
-          }`}
+          {`Total: ${total}`}
+          {/* Number(hair ? hair[selHair].cost : 0) +
+            Number(shave ? shave[selShave].cost : 0) +
+            Number(styling ? styling[selStyling].cost : 0) +
+            Number(hairColor ? hairColor[selHairColor].cost : 0) +
+            Number(waxing ? waxing[selWaxing].cost : 0) +
+            Number(menServices ? menServices[selMenServices].cost : 0) +
+            Number(nails ? nails[selNails].cost : 0) +
+            Number(others ? others[selOther].cost : 0) +
+            Number(packages ? packages[selPackages].cost : 0) */}
         </Text>
       </View>
       <View
@@ -230,20 +149,24 @@ const ServicesSelectionScreen = (props) => {
         }}>
         <Text style={styles.text}>Hair</Text>
         <View style={styles.textInput}>
-          <Picker
-            selectedValue={hair}
-            style={{ flex: 1 }}
-            onValueChange={(itemValue) => setHair(itemValue)}
-            itemStyle={styles.picker}
-            mode={'dropdown'}>
-            {hairArr.length > 0 &&
-              hairArr.map((val) => (
-                <Picker.Item
-                  label={`${val.name} (${val.price})`}
-                  value={val.price}
-                />
-              ))}
-          </Picker>
+          {hair.length !== 0 && hair.length !== 0 && (
+            <Picker
+              selectedValue={hair[selHair]?._id}
+              style={{ flex: 1 }}
+              onValueChange={(val, index) => {
+                setSelHair(index);
+              }}
+              itemStyle={styles.picker}
+              mode={'dropdown'}>
+              {hair.length > 0 &&
+                hair.map((val) => (
+                  <Picker.Item
+                    label={`${val.name} (Rs. ${val.cost})`}
+                    value={val._id}
+                  />
+                ))}
+            </Picker>
+          )}
         </View>
       </View>
       <View
@@ -256,16 +179,18 @@ const ServicesSelectionScreen = (props) => {
         <Text style={styles.text}>Shave</Text>
         <View style={styles.textInput}>
           <Picker
-            selectedValue={shave}
+            selectedValue={shave[selShave]?._id}
             style={{ flex: 1 }}
-            onValueChange={(itemValue) => setShave(itemValue)}
+            onValueChange={(val, index) => {
+              setSelShave(index);
+            }}
             itemStyle={styles.picker}
             mode={'dropdown'}>
-            {shaveArr.length > 0 &&
-              shaveArr.map((val) => (
+            {shave.length > 0 &&
+              shave.map((val) => (
                 <Picker.Item
-                  label={`${val.name} (${val.price})`}
-                  value={val.price}
+                  label={`${val.name} (Rs. ${val.cost})`}
+                  value={val._id}
                 />
               ))}
           </Picker>
@@ -281,16 +206,16 @@ const ServicesSelectionScreen = (props) => {
         <Text style={styles.text}>Styling</Text>
         <View style={styles.textInput}>
           <Picker
-            selectedValue={styling}
+            selectedValue={styling[selStyling]?._id}
             style={{ flex: 1 }}
-            onValueChange={(itemValue) => setStyling(itemValue)}
+            onValueChange={(val, index) => setSelStyling(index)}
             itemStyle={styles.picker}
             mode={'dropdown'}>
-            {stylingArr.length > 0 &&
-              stylingArr.map((val) => (
+            {styling.length > 0 &&
+              styling.map((val) => (
                 <Picker.Item
-                  label={`${val.name} (${val.price})`}
-                  value={val.price}
+                  label={`${val.name} (Rs. ${val.cost})`}
+                  value={val._id}
                 />
               ))}
           </Picker>
@@ -306,16 +231,16 @@ const ServicesSelectionScreen = (props) => {
         <Text style={styles.text}>Hair Color</Text>
         <View style={styles.textInput}>
           <Picker
-            selectedValue={hairColor}
+            selectedValue={hairColor[selHairColor]?._id}
             style={{ flex: 1 }}
-            onValueChange={(itemValue) => setHairColor(itemValue)}
+            onValueChange={(val, index) => setSelHairColor(index)}
             itemStyle={styles.picker}
             mode={'dropdown'}>
-            {hairColorArr.length > 0 &&
-              hairColorArr.map((val) => (
+            {hairColor.length > 0 &&
+              hairColor.map((val) => (
                 <Picker.Item
-                  label={`${val.name} (${val.price})`}
-                  value={val.price}
+                  label={`${val.name} (Rs. ${val.cost})`}
+                  value={val._id}
                 />
               ))}
           </Picker>
@@ -331,16 +256,16 @@ const ServicesSelectionScreen = (props) => {
         <Text style={styles.text}>Waxing</Text>
         <View style={styles.textInput}>
           <Picker
-            selectedValue={waxing}
+            selectedValue={waxing[selWaxing]?._id}
             style={{ flex: 1 }}
-            onValueChange={(itemValue) => setWaxing(itemValue)}
+            onValueChange={(val, index) => setSelWaxing(index)}
             itemStyle={styles.picker}
             mode={'dropdown'}>
-            {waxingArr.length > 0 &&
-              waxingArr.map((val) => (
+            {waxing.length > 0 &&
+              waxing.map((val) => (
                 <Picker.Item
-                  label={`${val.name} (${val.price})`}
-                  value={val.price}
+                  label={`${val.name} (Rs. ${val.cost})`}
+                  value={val._id}
                 />
               ))}
           </Picker>
@@ -356,16 +281,16 @@ const ServicesSelectionScreen = (props) => {
         <Text style={styles.text}>Men's Services</Text>
         <View style={styles.textInput}>
           <Picker
-            selectedValue={menServices}
+            selectedValue={menServices[selMenServices]?._id}
             style={{ flex: 1 }}
-            onValueChange={(itemValue) => setMenServices(itemValue)}
+            onValueChange={(val, index) => setSelMenServices(index)}
             itemStyle={styles.picker}
             mode={'dropdown'}>
-            {mensServicesArr.length > 0 &&
-              mensServicesArr.map((val) => (
+            {menServices.length > 0 &&
+              menServices.map((val) => (
                 <Picker.Item
-                  label={`${val.name} (${val.price})`}
-                  value={val.price}
+                  label={`${val.name} (Rs. ${val.cost})`}
+                  value={val._id}
                 />
               ))}
           </Picker>
@@ -381,16 +306,16 @@ const ServicesSelectionScreen = (props) => {
         <Text style={styles.text}>Nails</Text>
         <View style={styles.textInput}>
           <Picker
-            selectedValue={nails}
+            selectedValue={nails[selNails]?._id}
             style={{ flex: 1 }}
-            onValueChange={(itemValue) => setNails(itemValue)}
+            onValueChange={(val, index) => setSelNails(index)}
             itemStyle={styles.picker}
             mode={'dropdown'}>
-            {nailsArr.length > 0 &&
-              nailsArr.map((val) => (
+            {nails.length > 0 &&
+              nails.map((val) => (
                 <Picker.Item
-                  label={`${val.name} (${val.price})`}
-                  value={val.price}
+                  label={`${val.name} (Rs. ${val.cost})`}
+                  value={val._id}
                 />
               ))}
           </Picker>
@@ -406,16 +331,16 @@ const ServicesSelectionScreen = (props) => {
         <Text style={styles.text}>Others</Text>
         <View style={styles.textInput}>
           <Picker
-            selectedValue={others}
+            selectedValue={others[selOther]?._id}
             style={{ flex: 1 }}
-            onValueChange={(itemValue) => setOthers(itemValue)}
+            onValueChange={(val, index) => setSelOthers(index)}
             itemStyle={styles.picker}
             mode={'dropdown'}>
-            {othersArr.length > 0 &&
-              othersArr.map((val) => (
+            {others.length > 0 &&
+              others.map((val) => (
                 <Picker.Item
-                  label={`${val.name} (${val.price})`}
-                  value={val.price}
+                  label={`${val.name} (Rs. ${val.cost})`}
+                  value={val._id}
                 />
               ))}
           </Picker>
@@ -431,41 +356,46 @@ const ServicesSelectionScreen = (props) => {
           alignItems: 'center',
           marginTop: deviceHeight * 0.03,
         }}>
-        <Text style={styles.text}>Paclages</Text>
+        <Text style={styles.text}>Packages</Text>
         <View style={styles.textInput}>
           <Picker
-            selectedValue={packages}
+            selectedValue={packages[selPackages]?._id}
             style={{ flex: 1 }}
-            onValueChange={(itemValue) => setPackages(itemValue)}
+            onValueChange={(val, index) => setSelPackages(index)}
             itemStyle={styles.picker}
             mode={'dropdown'}>
-            {packagesArr.length > 0 &&
-              packagesArr.map((val) => (
+            {packages.length > 0 &&
+              packages.map((val) => (
                 <Picker.Item
-                  label={`${val.name} (${val.price})`}
-                  value={val.price}
+                  label={`${val.name} (Rs. ${val.cost})`}
+                  value={val._id}
                 />
               ))}
           </Picker>
         </View>
       </View>
       <View style={{ marginTop: deviceHeight * 0.03 }}>
-        {Number(hair) +
-          Number(shave) +
-          Number(styling) +
-          Number(hairColor) +
-          Number(waxing) +
-          Number(menServices) +
-          Number(nails) +
-          Number(others) +
-          Number(packages) >
-          0 && (
+        {total !== 0 && (
           <LinearGradient
             colors={[colors.orange, colors.red]}
             style={[styles.button]}>
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('Select Time');
+                props.navigation.navigate('Select Time', {
+                  id: props.route.params.id,
+                  selected: {
+                    hair: hair[selHair]?._id,
+                    shave: shave[selShave]?._id,
+                    styling: styling[selStyling]?._id,
+                    hairColor: hairColor[selHairColor]?._id,
+                    waxing: waxing[selWaxing]?._id,
+                    menServices: menServices[selMenServices]?._id,
+                    nails: nails[selNails]?._id,
+                    others: others[selOther]?._id,
+                    packages: packages[selPackages]?._id,
+                  },
+                  total,
+                });
               }}>
               <Text style={styles.textBtn}>Continue</Text>
             </TouchableOpacity>

@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 
 import SalonCard from '../../components/SalonCard';
 import colors from '../../styles/colors';
-
+import axios from '../../../config';
 const salons = [
   {
     id: 1,
@@ -96,6 +96,9 @@ export default function HomeScreen(props) {
   const [search, setSearch] = useState('');
   const [markers, setMarkers] = useState([]);
   const [getmarginBottom, setMarginBottom] = useState(1);
+  const [saloons, setSaloons] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [rawData, setRawData] = useState([]);
   const [getCoordinate, setCoordinate] = useState({
     latitude: 37.78825,
     longitude: -122.4324,
@@ -104,7 +107,58 @@ export default function HomeScreen(props) {
   });
 
   useEffect(() => {
+    setFilteredData((old) => {
+      if (!search) return rawData;
+      else {
+        let regex = new RegExp(search.trim().toLowerCase());
+        return rawData.filter((RR) =>
+          regex.test(JSON.stringify(RR).trim().toLowerCase()),
+        );
+      }
+    });
+  }, [search, rawData]);
+
+  useEffect(() => {
     setMarkers(pointers);
+  }, []);
+
+  useEffect(() => {
+    setMarkers(
+      filteredData.map((SS) => {
+        return {
+          id: SS._id,
+          coordinates: {
+            latitude: parseFloat(SS.latitude),
+            longitude: parseFloat(SS.longitude),
+          },
+        };
+      }),
+    );
+    setSaloons(
+      filteredData.map((SS) => {
+        return {
+          name: SS.firstName + ' ' + SS.lastName,
+          address:
+            SS.address.length > 30
+              ? SS.address.slice(0, 30) + '...'
+              : SS.address,
+          rating: 5,
+          image: {
+            uri: `data:${SS?.image?.type};base64,${SS?.image?.data}`,
+          },
+          id: SS._Id,
+        };
+      }),
+    );
+  }, [filteredData]);
+
+  useEffect(() => {
+    if (saloons.length === 0) {
+      axios.get('/saloon/allSaloons').then((res) => {
+        console.log(res.data);
+        setRawData(res.data);
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -183,8 +237,8 @@ export default function HomeScreen(props) {
         contentContainerStyle={{ paddingHorizontal: 5 }}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        data={salons}
-        keyExtractor={(salon) => salon.id.toString()}
+        data={saloons}
+        keyExtractor={(salon, index) => index.toString()}
         renderItem={({ item }) => (
           <SalonCard
             title={item.name}
