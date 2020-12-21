@@ -127,6 +127,7 @@ const reviews = [
 export default function SalonProfileScreen(props) {
   const [saloonSpecialists, setSaloonSpecialists] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [salons, setSalon] = useState();
   const [getCoordinate, setCoordinate] = useState({
     latitude: 33.656969,
     longitude: 73.153954,
@@ -134,10 +135,26 @@ export default function SalonProfileScreen(props) {
     longitudeDelta: 0.001,
   });
   useEffect(() => {
+    //salon details
+    axios.get(`/saloon/barber/${props.route.params.id}`).then((res) => {
+      setSalon({
+        id: res.data._id,
+        title: res.data.shopTitle,
+        subTitle:
+          res.data.address.length > 30
+            ? res.data.address.slice(0, 30) + '...'
+            : res.data.address,
+        rating: 5,
+        image: `data:${res.data?.image?.type};base64,${res.data?.image?.data}`,
+      });
+      console.log(salons);
+    });
+
+    //specialists
     axios
       .get(`/saloon/saloonSpecialist/${props.route.params.id}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setSaloonSpecialists(
           res.data
             .filter((SS) => SS.status)
@@ -166,7 +183,7 @@ export default function SalonProfileScreen(props) {
       style={styles.screen}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}>
-      <ImageBackground style={styles.image} source={salon.image}>
+      <ImageBackground style={styles.image} source={{ uri: salons?.image }}>
         <LinearGradient
           colors={[(0, 0, 0, 0), (0, 0, 0, 0), colors.black]}
           style={{ flex: 1 }}>
@@ -192,8 +209,8 @@ export default function SalonProfileScreen(props) {
               bottom: 5,
             }}>
             <View style={styles.detailsContainer}>
-              <Text style={styles.title}>{salon.title}</Text>
-              <Text style={styles.subTitle}>{salon.subTitle}</Text>
+              <Text style={styles.title}>{salons?.title}</Text>
+              <Text style={styles.subTitle}>{salons?.subTitle}</Text>
             </View>
             <View
               style={{
@@ -204,7 +221,7 @@ export default function SalonProfileScreen(props) {
                 right: 20,
                 bottom: 5,
               }}>
-              <Text style={styles.ratingText}>{salon.rating}</Text>
+              <Text style={styles.ratingText}>{salons?.rating}</Text>
               <Foundation name="star" size={18} color="#F0C30E" />
             </View>
           </View>

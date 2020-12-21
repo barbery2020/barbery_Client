@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -10,6 +10,7 @@ import {
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 // import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from '../../../config';
 
 import Card from '../../components/AppointmentCard';
 import colors from '../../styles/colors';
@@ -148,6 +149,49 @@ const appointment1 = [
 export default function AppointmentScreen(props) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDate, setDate] = useState('Select Date');
+  const [appointments, setAppointments] = useState();
+  const [salons, setSalon] = useState();
+
+  // slots: slots.map((S) => ({
+  //   ...S,
+  //   available: parseInt(Math.random() * 10) % 3 == 0,
+  // })),
+
+  useEffect(() => {
+    axios.get('/appointment/user').then((res) => {
+      console.log(res.data);
+      setAppointments(
+        res.data.map((SS) => ({
+          title: SS.firstName + ' ' + SS.lastName,
+          image: `data:${SS?.picture?.type};base64,${SS?.picture?.data}`,
+          status: SS.status,
+          price: SS.bill,
+          time: SS.date,
+          id: SS._id,
+          barber: SS.barber,
+          user: SS.user,
+          specialist: SS.specialist,
+        })),
+      );
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   axios.get(`/saloon/barber/${appointments?.barber}`).then((res) => {
+  //     setSalon({
+  //       id: res.data._id,
+  //       title: res.data.shopTitle,
+  //       subTitle:
+  //         res.data.address.length > 30
+  //           ? res.data.address.slice(0, 30) + '...'
+  //           : res.data.address,
+  //       rating: 5,
+  //       image: `data:${res.data?.image?.type};base64,${res.data?.image?.data}`,
+  //     });
+  //     // console.log(salons);
+  //   }),
+  //     console.log(appointments);
+  // }, [appointments !== undefined]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -196,12 +240,12 @@ export default function AppointmentScreen(props) {
       <FlatList
         contentContainerStyle={{ paddingBottom: 15 }}
         style={styles.flatScreen}
-        data={appointment1}
-        keyExtractor={(appointment1) => appointment1.id.toString()}
+        data={appointments}
+        keyExtractor={(val, index) => index.toString()}
         renderItem={({ item }) => (
           <Card
             title={item.name}
-            subTitle={'Rs.' + item.price}
+            subTitle={'Rs. ' + item.price}
             time={item.time}
             status={item.status}
             image={item.image}
