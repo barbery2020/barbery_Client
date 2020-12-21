@@ -17,8 +17,17 @@ import LinearGradient from 'react-native-linear-gradient';
 import ReviewCard from '../../components/ReviewCard';
 import Separator from '../../components/Separator';
 import colors from '../../styles/colors';
+import { connect } from 'react-redux';
+import { getUser } from '../../redux/actions/mainRecords';
 
-export default function AppointmentDetailScreen({ item }) {
+function AppointmentDetailScreen({
+  user,
+  loading,
+  getUser,
+  route: {
+    params: { item },
+  },
+}) {
   const [isCompleted, setCompleted] = React.useState(true);
   const [isReviewed, setReviewed] = React.useState(false);
   const [isReview, setReview] = React.useState('');
@@ -64,15 +73,23 @@ export default function AppointmentDetailScreen({ item }) {
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    getUser();
   }, []);
 
   return (
     <ScrollView style={styles.screen}>
       <View style={styles.cardPerson}>
-        <Image style={styles.image} source={item.image} />
+        <Image
+          style={styles.image}
+          source={{
+            uri: `data:${user?.image?.type};base64,${user?.image?.data}`,
+          }}
+        />
         <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.time}>{item.time}</Text>
+          <Text style={styles.title}>{user?.firstName}</Text>
+          <Text style={styles.time}>{`${item?.time} / ${
+            item?.date?.split('T')[0]
+          }`}</Text>
         </View>
       </View>
       <View style={styles.servicesDetails}>
@@ -83,12 +100,12 @@ export default function AppointmentDetailScreen({ item }) {
         <SafeAreaView style={styles.card}>
           <FlatList
             style={styles.flatScreen}
-            data={services}
-            keyExtractor={(service) => service.id.toString()}
+            data={item?.services}
+            keyExtractor={(service) => service._id.toString()}
             renderItem={({ item }) => (
               <View style={styles.flatItem}>
-                <Text>{item.service}</Text>
-                <Text>{item.price}</Text>
+                <Text>{item?.name}</Text>
+                <Text>{item?.cost}</Text>
               </View>
             )}
           />
@@ -98,23 +115,23 @@ export default function AppointmentDetailScreen({ item }) {
         </View>
         <View style={styles.flatItem}>
           <Text style={styles.heading}>Promo</Text>
-          <Text>-100</Text>
+          <Text>-{item?.promo != 0 && item?.promo}</Text>
         </View>
         <View style={styles.flatItem}>
           <Text style={styles.heading}>Total</Text>
-          <Text>750</Text>
+          <Text>{item?.bill}</Text>
         </View>
       </View>
       <View style={styles.cardPerson}>
-        <Image style={styles.image} source={item.specialistImage} />
+        <Image style={styles.image} source={{ uri: item.image }} />
         <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{item.specialist}</Text>
+          <Text style={styles.title}>{item?.title}</Text>
           <Text style={styles.time}>specialist</Text>
         </View>
       </View>
 
       {/* Review Card */}
-      {isCompleted && !isReviewed && (
+      {!item?.status && !isReviewed && (
         <View style={styles.reviewCard}>
           <View style={{ paddingVertical: 30 }}>
             <Separator />
@@ -130,7 +147,6 @@ export default function AppointmentDetailScreen({ item }) {
             />
             <TextInput
               style={styles.textInput}
-              // placeholder={'e.g. abc@gmail.com'}
               multiline
               numberOfLines={4}
               maxLength={200}
@@ -250,6 +266,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: 30,
     justifyContent: 'space-between',
+    marginBottom: 5,
   },
   flatItemHeading: {
     flexDirection: 'row',
@@ -284,3 +301,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+
+const mapStateToProps = ({ mainRecords: { user, loading } }) => ({
+  user,
+  loading,
+});
+
+const mapActionToProps = { getUser };
+export default connect(
+  mapStateToProps,
+  mapActionToProps,
+)(AppointmentDetailScreen);

@@ -15,147 +15,11 @@ import axios from '../../../config';
 import Card from '../../components/AppointmentCard';
 import colors from '../../styles/colors';
 
-const appointment1 = [
-  {
-    id: 1,
-    name: 'Tuseeq Raza',
-    price: 200,
-    status: 'Active',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 2,
-    name: 'Tuseeq Ahmed',
-    price: 300,
-    status: 'Active',
-    time: 'Oct 17, 2020 9:50 AM',
-    image: require('../../assets/images/image_2.jpg'),
-  },
-  {
-    id: 3,
-    name: 'Abdullah',
-    price: 100,
-    status: 'Active',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_3.jpg'),
-  },
-  {
-    id: 4,
-    name: 'Humza Jameel',
-    price: 250,
-    status: 'Active',
-    time: 'Oct 16, 2020 11:50 AM',
-    image: require('../../assets/images/image_5.jpg'),
-  },
-  {
-    id: 5,
-    name: 'Tuseeq Raza',
-    price: 200,
-    status: 'Active',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_6.jpg'),
-  },
-  {
-    id: 6,
-    name: 'Tuseeq Ahmed',
-    price: 300,
-    status: 'Active',
-    time: 'Oct 17, 2020 9:50 AM',
-    image: require('../../assets/images/image_7.jpg'),
-  },
-  {
-    id: 7,
-    name: 'Abdullah',
-    price: 100,
-    status: 'Active',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_8.jpg'),
-  },
-  {
-    id: 8,
-    name: 'Humza Jameel',
-    price: 250,
-    status: 'Active',
-    time: 'Oct 16, 2020 11:50 AM',
-    image: require('../../assets/images/image_9.jpg'),
-  },
-  {
-    id: 9,
-    name: 'Masroor Ahmad',
-    price: 200,
-    status: 'Completed',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_9.jpg'),
-  },
-  {
-    id: 10,
-    name: 'Raza Saleem',
-    price: 300,
-    status: 'Completed',
-    time: 'Oct 17, 2020 9:50 AM',
-    image: require('../../assets/images/image_8.jpg'),
-  },
-  {
-    id: 11,
-    name: 'Awais',
-    price: 100,
-    status: 'Completed',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_7.jpg'),
-  },
-  {
-    id: 12,
-    name: 'Kashif Habib',
-    price: 250,
-    status: 'Completed',
-    time: 'Oct 16, 2020 11:50 AM',
-    image: require('../../assets/images/image_6.jpg'),
-  },
-  {
-    id: 13,
-    name: 'Naveed',
-    price: 200,
-    status: 'Completed',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_5.jpg'),
-  },
-  {
-    id: 14,
-    name: 'Amjad Ahmad',
-    price: 300,
-    status: 'Completed',
-    time: 'Oct 17, 2020 9:50 AM',
-    image: require('../../assets/images/image_3.jpg'),
-  },
-  {
-    id: 15,
-    name: 'Faisal Shah',
-    price: 100,
-    status: 'Completed',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_2.jpg'),
-  },
-  {
-    id: 16,
-    name: 'Jahangeer Khan',
-    price: 250,
-    status: 'Completed',
-    time: 'Oct 16, 2020 11:50 AM',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-];
-
 export default function AppointmentScreen(props) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDate, setDate] = useState('Select Date');
   const [appointments, setAppointments] = useState();
   const [salons, setSalon] = useState();
-
-  // slots: slots.map((S) => ({
-  //   ...S,
-  //   available: parseInt(Math.random() * 10) % 3 == 0,
-  // })),
 
   useEffect(() => {
     axios.get('/appointment/user').then((res) => {
@@ -166,29 +30,16 @@ export default function AppointmentScreen(props) {
           image: `data:${SS?.specialist?.picture?.type};base64,${SS?.specialist?.picture?.data}`,
           status: SS.status,
           price: SS.bill,
-          time: SS.date,
+          time: SS.timing,
+          date: SS.date,
           id: SS._id,
+          services: SS?.services,
+          promo: SS?.promo,
+          bill: SS?.bill,
         })),
       );
     });
   }, []);
-
-  // useEffect(() => {
-  //   axios.get(`/saloon/barber/${appointments?.barber}`).then((res) => {
-  //     setSalon({
-  //       id: res.data._id,
-  //       title: res.data.shopTitle,
-  //       subTitle:
-  //         res.data.address.length > 30
-  //           ? res.data.address.slice(0, 30) + '...'
-  //           : res.data.address,
-  //       rating: 5,
-  //       image: `data:${res.data?.image?.type};base64,${res.data?.image?.data}`,
-  //     });
-  //     // console.log(salons);
-  //   }),
-  //     console.log(appointments);
-  // }, [appointments !== undefined]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);

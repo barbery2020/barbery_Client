@@ -18,6 +18,7 @@ import SalonCard from '../../components/SalonCard';
 import PhotoCard from '../../components/PhotoCard';
 import colors from '../../styles/colors';
 import Axios from 'axios';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const salons = [
   {
@@ -84,7 +85,7 @@ export default function HomeScreen(props) {
         setSaloons(
           res.data?.map((SS) => {
             return {
-              name: SS.firstName + ' ' + SS.lastName,
+              name: SS.shopTitle,
               address:
                 SS.address.length > 30
                   ? SS.address.slice(0, 30) + '...'
@@ -134,20 +135,17 @@ export default function HomeScreen(props) {
           }}>
           Find and Book best Services
         </Text>
-        <View style={styles.textInput}>
-          <TextInput
-            style={{ flex: 1 }}
-            maxLength={50}
-            onChangeText={(text) => setSearch(text)}
-            value={search}
-          />
-          <Icon
-            name="search1"
-            color={colors.red}
-            size={30}
-            onPress={() => props.navigation.navigate('Search')}
-          />
-        </View>
+        <TouchableOpacity onPress={() => props.navigation.navigate('Search')}>
+          <View style={styles.textInput}>
+            <TextInput
+              style={{ flex: 1 }}
+              maxLength={50}
+              onChangeText={(text) => setSearch(text)}
+              value={search}
+            />
+            <Icon name="search1" color={colors.red} size={30} />
+          </View>
+        </TouchableOpacity>
       </View>
       <View>
         <Text style={{ fontSize: 22, marginLeft: 20, marginTop: 5 }}>

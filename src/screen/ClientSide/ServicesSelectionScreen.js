@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  LogBox,
 } from 'react-native';
 import axios from '../../../config';
 
@@ -40,6 +41,10 @@ const ServicesSelectionScreen = (props) => {
   const [selPackages, setSelPackages] = useState(0);
 
   const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['Each child in a list should have a unique "key" prop']);
+  }, []);
 
   useEffect(() => {
     setDeviceHeight(Math.round(Dimensions.get('window').height));

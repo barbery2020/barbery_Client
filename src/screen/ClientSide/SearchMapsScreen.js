@@ -95,7 +95,7 @@ const height = Math.round(Dimensions.get('window').height);
 export default function HomeScreen(props) {
   const [search, setSearch] = useState('');
   const [markers, setMarkers] = useState([]);
-  const [getmarginBottom, setMarginBottom] = useState(1);
+  const [getMarginBottom, setMarginBottom] = useState(1);
   const [saloons, setSaloons] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [rawData, setRawData] = useState([]);
@@ -137,7 +137,8 @@ export default function HomeScreen(props) {
     setSaloons(
       filteredData.map((SS) => {
         return {
-          name: SS.firstName + ' ' + SS.lastName,
+          id: SS._id,
+          name: SS.shopTitle,
           address:
             SS.address.length > 30
               ? SS.address.slice(0, 30) + '...'
@@ -146,7 +147,6 @@ export default function HomeScreen(props) {
           image: {
             uri: `data:${SS?.image?.type};base64,${SS?.image?.data}`,
           },
-          id: SS._Id,
         };
       }),
     );
@@ -155,7 +155,7 @@ export default function HomeScreen(props) {
   useEffect(() => {
     if (saloons.length === 0) {
       axios.get('/saloon/allSaloons').then((res) => {
-        console.log(res.data);
+        console.log('greeeeeen', res.data);
         setRawData(res.data);
       });
     }
@@ -201,14 +201,14 @@ export default function HomeScreen(props) {
           color={colors.red}
           size={30}
           onPress={() => {
-            search && setSearched(true);
+            // search && setSearched(true);
           }}
         />
       </View>
       <View style={styles.mapContainer}>
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          style={[styles.map, { marginBottom: getmarginBottom }]}
+          style={[styles.map, { marginBottom: getMarginBottom }]}
           region={{
             latitude: getCoordinate.latitude,
             longitude: getCoordinate.longitude,
@@ -245,7 +245,10 @@ export default function HomeScreen(props) {
             subTitle={item.address}
             rating={item.rating}
             image={item.image}
-            onPress={() => props.navigation.navigate('Salon Profile')}
+            onPress={
+              () => props.navigation.navigate('Salon Profile', { id: item.id })
+              // console.log(item)
+            }
           />
         )}
       />

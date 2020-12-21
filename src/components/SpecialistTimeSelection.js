@@ -12,7 +12,7 @@ function SpecialistTimeSelection({ title, image, onPress, itemColor }) {
       onPress={onPress}>
       <View
         style={{ flex: 1, alignItems: 'center', backgroundColor: itemColor }}>
-        <Image style={styles.card} source={image} />
+        <Image style={styles.card} source={{ uri: image }} />
         <Text style={styles.title}>{title}</Text>
       </View>
     </TouchableOpacity>

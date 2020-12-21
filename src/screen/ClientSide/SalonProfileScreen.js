@@ -136,7 +136,7 @@ export default function SalonProfileScreen(props) {
   });
   useEffect(() => {
     //salon details
-    axios.get(`/saloon/barber/${props.route.params.id}`).then((res) => {
+    axios.get(`/saloon/barber/${props?.route?.params?.id}`).then((res) => {
       setSalon({
         id: res.data._id,
         title: res.data.shopTitle,
@@ -154,7 +154,7 @@ export default function SalonProfileScreen(props) {
 
     //specialists
     axios
-      .get(`/saloon/saloonSpecialist/${props.route.params.id}`)
+      .get(`/saloon/saloonSpecialist/${props?.route?.params?.id}`)
       .then((res) => {
         // console.log(res.data);
         setSaloonSpecialists(
