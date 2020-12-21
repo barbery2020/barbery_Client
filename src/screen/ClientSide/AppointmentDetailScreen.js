@@ -19,15 +19,18 @@ import Separator from '../../components/Separator';
 import colors from '../../styles/colors';
 import { connect } from 'react-redux';
 import { getUser } from '../../redux/actions/mainRecords';
+import axios from '../../../config';
 
 function AppointmentDetailScreen({
   user,
   loading,
   getUser,
   route: {
-    params: { item },
+    params: { item: tem },
   },
 }) {
+  const [item, setItem] = React.useState(tem);
+  console.log('item:', item);
   const [isCompleted, setCompleted] = React.useState(true);
   const [isReviewed, setReviewed] = React.useState(false);
   const [isReview, setReview] = React.useState('');
@@ -69,6 +72,18 @@ function AppointmentDetailScreen({
     text:
       'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
     time: 'Oct 23, 2020 4:50 PM',
+  };
+
+  const saveReview = async () => {
+    try {
+      const res = await axios.post('/appointment/review/' + item?.id, {
+        userReview: isReview,
+        stars: isRating.toString(),
+      });
+      setItem({ ...item, review: res?.data });
+    } catch (err) {
+      console.log('kkkkkkkkkkkkkkkkkkkkkkk', err.response.data);
+    }
   };
 
   useEffect(() => {
@@ -131,7 +146,7 @@ function AppointmentDetailScreen({
       </View>
 
       {/* Review Card */}
-      {!item?.status && !isReviewed && (
+      {!item?.status && !item?.review && (
         <View style={styles.reviewCard}>
           <View style={{ paddingVertical: 30 }}>
             <Separator />
@@ -163,7 +178,8 @@ function AppointmentDetailScreen({
                 onPress={() => {
                   alert('Profile is updated.');
                   // setCompleted(true);
-                  setReviewed(true);
+                  // setReviewed(true);
+                  saveReview();
                 }}>
                 <Text style={styles.textBtn}>Save</Text>
               </TouchableOpacity>
@@ -172,16 +188,16 @@ function AppointmentDetailScreen({
         </View>
       )}
 
-      {isReviewed && (
+      {item?.review && (
         <View style={styles.reviewCard}>
           <View style={{ paddingVertical: 30 }}>
             <Separator />
           </View>
           <ReviewCard
-            title={review.name}
-            time={review.time}
-            text={isReview}
-            rated={isRating}
+            title={user?.firstName}
+            time={item?.review?.date?.split('T')[0]}
+            text={item?.review?.userReview}
+            rated={Number(item?.review?.stars)}
           />
         </View>
       )}

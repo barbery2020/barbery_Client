@@ -167,6 +167,21 @@ export default function SalonProfileScreen(props) {
             })),
         );
       });
+
+    axios
+      .get(`/saloon/review/barber/${props?.route?.params?.id}`)
+      .then((res) => {
+        setReviews(
+          res.data?.map((val) => ({
+            id: val?._id,
+            name: val?.user?.firstName,
+            time: val?.review?.date?.split('T')[0],
+            image: `data:${val?.user?.image?.type};base64,${val?.user?.image?.data}`,
+            text: val?.review?.userReview,
+            rated: Number(val?.review?.stars),
+          })),
+        );
+      });
   }, [props.route.params.id]);
   useEffect(() => {});
 
@@ -181,10 +196,7 @@ export default function SalonProfileScreen(props) {
   };
 
   return (
-    <ScrollView
-      style={styles.screen}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}>
+    <>
       <ImageBackground style={styles.image} source={{ uri: salons?.image }}>
         <LinearGradient
           colors={[(0, 0, 0, 0), (0, 0, 0, 0), colors.black]}
@@ -276,48 +288,53 @@ export default function SalonProfileScreen(props) {
           <Text style={styles.textBtn}>Direction</Text>
         </TouchableOpacity>
       </View>
-      <View style={{ flex: 1, marginTop: 5, backgroundColor: colors.white }}>
-        <Text style={{ fontSize: 22, marginLeft: 20, marginTop: 10 }}>
-          Salon Specialists
-        </Text>
-        <FlatList
-          style={{ flex: 1 }}
-          horizontal={true}
-          contentContainerStyle={{ paddingHorizontal: 10 }}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          data={saloonSpecialists}
-          keyExtractor={(listing) => listing.id}
-          renderItem={({ item }) => (
-            <SpecialistCard
-              title={item.title}
-              status={item.status}
-              image={item.image}
-            />
-          )}
-        />
-      </View>
-      <View style={{ flex: 1, marginTop: 5, backgroundColor: colors.white }}>
-        <Text style={{ fontSize: 22, marginLeft: 20, marginTop: 10 }}>
-          Reviews
-        </Text>
-        <FlatList
-          contentContainerStyle={{ paddingTop: 10 }}
-          style={{ flex: 1 }}
-          data={reviews}
-          keyExtractor={(review) => review.id.toString()}
-          renderItem={({ item }) => (
-            <ReviewCard
-              title={item.name}
-              time={item.time}
-              image={item.image}
-              text={item.text}
-              rated={item.rated}
-            />
-          )}
-        />
-      </View>
-    </ScrollView>
+      <ScrollView
+        style={styles.screen}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}>
+        <View style={{ flex: 1, marginTop: 5, backgroundColor: colors.white }}>
+          <Text style={{ fontSize: 22, marginLeft: 20, marginTop: 10 }}>
+            Salon Specialists
+          </Text>
+          <FlatList
+            style={{ flex: 1 }}
+            horizontal={true}
+            contentContainerStyle={{ paddingHorizontal: 10 }}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={saloonSpecialists}
+            keyExtractor={(listing) => listing.id}
+            renderItem={({ item }) => (
+              <SpecialistCard
+                title={item.title}
+                status={item.status}
+                image={item.image}
+              />
+            )}
+          />
+        </View>
+        <View style={{ flex: 1, marginTop: 5, backgroundColor: colors.white }}>
+          <Text style={{ fontSize: 22, marginLeft: 20, marginTop: 10 }}>
+            Reviews
+          </Text>
+          <FlatList
+            contentContainerStyle={{ paddingVertical: 10 }}
+            style={{ flex: 1 }}
+            data={reviews}
+            keyExtractor={(review) => review.id.toString()}
+            renderItem={({ item }) => (
+              <ReviewCard
+                title={item.name}
+                time={item.time}
+                image={item.image}
+                text={item.text}
+                rated={item.rated}
+              />
+            )}
+          />
+        </View>
+      </ScrollView>
+    </>
   );
 }
 

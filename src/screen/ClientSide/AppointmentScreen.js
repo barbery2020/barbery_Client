@@ -36,6 +36,7 @@ export default function AppointmentScreen(props) {
           services: SS?.services,
           promo: SS?.promo,
           bill: SS?.bill,
+          review: SS?.review,
         })),
       );
     });
