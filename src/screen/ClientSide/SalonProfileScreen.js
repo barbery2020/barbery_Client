@@ -143,9 +143,7 @@ export default function SalonProfileScreen(props) {
             .filter((SS) => SS.status)
             .map((SS) => ({
               title: SS.name,
-              image: {
-                uri: `data:${SS?.image?.type};base64,${SS?.image?.data}`,
-              },
+              image: `data:${SS?.picture?.type};base64,${SS?.picture?.data}`,
               id: SS._id,
             })),
         );
@@ -270,9 +268,6 @@ export default function SalonProfileScreen(props) {
               title={item.title}
               status={item.status}
               image={item.image}
-              onPress={() =>
-                props.navigation.navigate('Specialist Details Screen')
-              }
             />
           )}
         />

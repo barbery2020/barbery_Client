@@ -129,15 +129,6 @@ const ServicesSelectionScreen = (props) => {
         </Text>
         <Text style={{ fontSize: 16, color: colors.red, marginEnd: '5%' }}>
           {`Total: ${total}`}
-          {/* Number(hair ? hair[selHair].cost : 0) +
-            Number(shave ? shave[selShave].cost : 0) +
-            Number(styling ? styling[selStyling].cost : 0) +
-            Number(hairColor ? hairColor[selHairColor].cost : 0) +
-            Number(waxing ? waxing[selWaxing].cost : 0) +
-            Number(menServices ? menServices[selMenServices].cost : 0) +
-            Number(nails ? nails[selNails].cost : 0) +
-            Number(others ? others[selOther].cost : 0) +
-            Number(packages ? packages[selPackages].cost : 0) */}
         </Text>
       </View>
       <View

@@ -146,16 +146,16 @@ const TimeSelectionScreen = (props) => {
 
   const bookAppointment = () => {
     let payload = {
-      bill: 200,
+      bill: props.route.params.total,
       timing: slots.find((s) => s.id == getSlotId)?.timing,
       date: date,
-      services: Object.keys(props.route.params.selected).map(
-        (K) => props.route.params.selected[K],
-      ),
+      services: Object.keys(props.route.params.selected)
+        .filter((K) => props.route.params.selected[K] !== -1)
+        .map((K) => props.route.params.selected[K]),
       specialist: getId,
       barber: props.route.params.id,
     };
-    console.log(payload);
+    console.log('PAYLOAD 11111111', payload);
     axios.post('/appointment', payload).then((res) => console.log(res.data));
   };
   useEffect(() => {
@@ -168,9 +168,7 @@ const TimeSelectionScreen = (props) => {
             .filter((SS) => SS.status)
             .map((SS) => ({
               title: SS.name,
-              image: {
-                uri: `data:${SS?.image?.type};base64,${SS?.image?.data}`,
-              },
+              image: `data:${SS?.picture?.type};base64,${SS?.picture?.data}`,
               id: SS._id,
               slots: slots.map((S) => ({
                 ...S,
@@ -181,7 +179,7 @@ const TimeSelectionScreen = (props) => {
       });
   }, [props.route.params.id]);
   useEffect(() => {
-    console.log(`from use effect ${getSlotId}`);
+    // console.log(`from use effect ${getSlotId}`);
   }, [getSlotId]);
 
   const slotColorHandler = (id) => {
