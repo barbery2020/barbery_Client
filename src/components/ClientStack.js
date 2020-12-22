@@ -21,6 +21,7 @@ import GalleryScreen from '../screen/ClientSide/GalleryScreen';
 import AppointmentListScreen from '../screen/ClientSide/AppointmentScreen';
 import AppointmentDetailScreen from '../screen/ClientSide/AppointmentDetailScreen';
 import SpecialistDetailsScreen from '../screen/ClientSide/SpecialistDetailsScreen';
+import AugmentedReality from '../screen/others/ChatScreen';
 import ChatScreen from '../screen/others/ChatScreen';
 
 const Drawer = createDrawerNavigator();
@@ -56,6 +57,16 @@ export default class ClientStack extends Component {
             tabBarLabel: 'Profile',
             tabBarIcon: ({ color }) => (
               <Icons name="user" color={color} size={24} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="AR"
+          component={AugmentedReality}
+          options={{
+            tabBarLabel: 'AR',
+            tabBarIcon: ({ color }) => (
+              <Icons name="meho" color={color} size={24} />
             ),
           }}
         />

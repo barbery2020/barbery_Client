@@ -4,6 +4,7 @@ import ImageView from 'react-native-image-viewing';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from '../../../config';
 
+import LoadingIndicator from '../../components/LoadingIndicator';
 import ImageGalleryCard from '../../components/ImageGalleryCard';
 import colors from '../../styles/colors';
 
@@ -11,6 +12,8 @@ export default function GalleryScreen({ route: { params } }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [photos, setPhotos] = useState([]);
   const [visible, setIsVisible] = useState(false);
+  const [loading, setLoading] = React.useState(false);
+
   const columns = 4;
 
   const getGallery = async () => {
@@ -22,39 +25,44 @@ export default function GalleryScreen({ route: { params } }) {
         uri: `data:${val?.picture?.type};base64,${val?.picture?.data}`,
       })),
     );
+    setLoading(false);
   };
 
   useEffect(() => {
+    setLoading(true);
     getGallery();
     return () => {};
   }, []);
 
   return (
-    <View style={styles.screen}>
-      <FlatList
-        style={{ flex: 1 }}
-        numColumns={columns}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        data={photos}
-        keyExtractor={(photo) => photo.id.toString()}
-        renderItem={({ item, index }) => (
-          <ImageGalleryCard
-            image={item.uri}
-            onPress={() => {
-              setIsVisible(true);
-              setImageIndex(index);
-            }}
-          />
-        )}
-      />
-      <ImageView
-        images={photos}
-        imageIndex={imageIndex}
-        visible={visible}
-        onRequestClose={() => setIsVisible(false)}
-      />
-    </View>
+    <>
+      {loading && <LoadingIndicator />}
+      <View style={styles.screen}>
+        <FlatList
+          style={{ flex: 1 }}
+          numColumns={columns}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          data={photos}
+          keyExtractor={(photo) => photo.id.toString()}
+          renderItem={({ item, index }) => (
+            <ImageGalleryCard
+              image={item.uri}
+              onPress={() => {
+                setIsVisible(true);
+                setImageIndex(index);
+              }}
+            />
+          )}
+        />
+        <ImageView
+          images={photos}
+          imageIndex={imageIndex}
+          visible={visible}
+          onRequestClose={() => setIsVisible(false)}
+        />
+      </View>
+    </>
   );
 }
 

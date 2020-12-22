@@ -99,96 +99,98 @@ function ProfileScreen({
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <>
       {loading && <LoadingIndicator />}
-      <View style={{ width: '100%', height: '100%' }}>
-        <TouchableOpacity style={styles.imageContainer} onPress={selectFile}>
-          <Image style={styles.profileImage} source={{ uri: image }} />
-        </TouchableOpacity>
-        <View style={styles.profileData}>
-          <View style={styles.row}>
-            <View style={styles.rowInput}>
-              <Text style={styles.text}>First Name</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder={'Ahmed'}
-                maxLength={50}
-                onChangeText={(text) => {
-                  setFirstName(text);
-                  setChange(true);
-                }}
-                value={firstName}
-              />
+      <ScrollView style={styles.container}>
+        <View style={{ width: '100%', height: '100%' }}>
+          <TouchableOpacity style={styles.imageContainer} onPress={selectFile}>
+            <Image style={styles.profileImage} source={{ uri: image }} />
+          </TouchableOpacity>
+          <View style={styles.profileData}>
+            <View style={styles.row}>
+              <View style={styles.rowInput}>
+                <Text style={styles.text}>First Name</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Ahmed'}
+                  maxLength={50}
+                  onChangeText={(text) => {
+                    setFirstName(text);
+                    setChange(true);
+                  }}
+                  value={firstName}
+                />
+              </View>
+              <View style={styles.rowInput}>
+                <Text style={styles.text}>Last Name</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={'Raza'}
+                  maxLength={50}
+                  onChangeText={(text) => {
+                    setLastName(text);
+                    setChange(true);
+                  }}
+                  value={lastName}
+                />
+              </View>
             </View>
-            <View style={styles.rowInput}>
-              <Text style={styles.text}>Last Name</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder={'Raza'}
-                maxLength={50}
-                onChangeText={(text) => {
-                  setLastName(text);
-                  setChange(true);
-                }}
-                value={lastName}
-              />
-            </View>
-          </View>
-          <Text style={styles.text}>Email</Text>
-          <TextInput
-            style={styles.textInput}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            placeholder={'e.g. abc@gmail.com'}
-            maxLength={50}
-            onChangeText={(text) => {
-              setEmail(text);
-              setChange(true);
-            }}
-            value={email}
-          />
-          <Text style={styles.text}>Phone no.</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder={'+92'}
-            keyboardType={'phone-pad'}
-            maxLength={13}
-            minLength={11}
-            onChangeText={(text) => {
-              setPhone(text);
-              setChange(true);
-            }}
-            value={phone}
-          />
+            <Text style={styles.text}>Email</Text>
+            <TextInput
+              style={styles.textInput}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              placeholder={'e.g. abc@gmail.com'}
+              maxLength={50}
+              onChangeText={(text) => {
+                setEmail(text);
+                setChange(true);
+              }}
+              value={email}
+            />
+            <Text style={styles.text}>Phone no.</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder={'+92'}
+              keyboardType={'phone-pad'}
+              maxLength={13}
+              minLength={11}
+              onChangeText={(text) => {
+                setPhone(text);
+                setChange(true);
+              }}
+              value={phone}
+            />
 
-          {isChange && (
+            {isChange && (
+              <LinearGradient
+                colors={[colors.orange, colors.red]}
+                style={styles.button}>
+                <TouchableOpacity
+                  style={{ width: '100%', alignItems: 'center' }}
+                  onPress={update}>
+                  <Text style={styles.textBtn}>Save</Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            )}
+
             <LinearGradient
               colors={[colors.orange, colors.red]}
               style={styles.button}>
               <TouchableOpacity
                 style={{ width: '100%', alignItems: 'center' }}
-                onPress={update}>
-                <Text style={styles.textBtn}>Save</Text>
+                onPress={() => {
+                  logout();
+                  AsyncStorage.removeItem('@Token');
+                  navigate('Welcome');
+                }}>
+                <Text style={styles.textBtn}>Logout</Text>
               </TouchableOpacity>
             </LinearGradient>
-          )}
-
-          <LinearGradient
-            colors={[colors.orange, colors.red]}
-            style={styles.button}>
-            <TouchableOpacity
-              style={{ width: '100%', alignItems: 'center' }}
-              onPress={() => {
-                logout();
-                AsyncStorage.removeItem('@Token');
-                navigate('Welcome');
-              }}>
-              <Text style={styles.textBtn}>Logout</Text>
-            </TouchableOpacity>
-          </LinearGradient>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }
 

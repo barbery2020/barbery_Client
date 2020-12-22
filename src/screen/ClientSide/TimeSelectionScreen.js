@@ -10,24 +10,19 @@ import {
   Platform,
   FlatList,
 } from 'react-native';
-
 import Modal, {
   ModalTitle,
   ModalFooter,
   ModalButton,
   ModalContent,
 } from 'react-native-modals';
-
 import moment from 'moment';
-
 import LinearGradient from 'react-native-linear-gradient';
-
 import DateTimePicker from '@react-native-community/datetimepicker';
-
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SpecialistTimeSelection from '../../components/SpecialistTimeSelection';
-
+import LoadingIndicator from '../../components/LoadingIndicator';
 import colors from '../../styles/colors';
 import axios from '../../../config';
 
@@ -94,45 +89,6 @@ const slots = [
   },
 ];
 
-const listings = [
-  {
-    id: 1,
-    title: 'Tuseeq',
-    status: 'Active',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 2,
-    title: 'Raza',
-    status: 'Active',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 3,
-    title: 'Humza',
-    status: 'Inactive',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 4,
-    title: 'Abdullah',
-    status: 'Active',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 5,
-    title: 'Asim',
-    status: 'Active',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 6,
-    title: 'Nadeem',
-    status: 'Active',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-];
-
 const TimeSelectionScreen = (props) => {
   const height = Math.round(Dimensions.get('window').height);
   const [date, setDate] = useState(new Date());
@@ -143,6 +99,8 @@ const TimeSelectionScreen = (props) => {
   const [getSlotId, setSlotId] = useState([]);
   const [modalVisibility, setModalVisibility] = useState(false);
   const [saloonSpecialist, setSaloonSpecialists] = useState([]);
+
+  const [loading, setLoading] = React.useState(false);
 
   const bookAppointment = () => {
     let payload = {
@@ -159,6 +117,7 @@ const TimeSelectionScreen = (props) => {
     axios.post('/appointment', payload).then((res) => console.log(res.data));
   };
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`/saloon/saloonSpecialist/${props.route.params.id}`)
       .then((res) => {
@@ -176,6 +135,7 @@ const TimeSelectionScreen = (props) => {
               })),
             })),
         );
+        setLoading(false);
       });
   }, [props.route.params.id]);
   useEffect(() => {
@@ -202,97 +162,100 @@ const TimeSelectionScreen = (props) => {
     );
   };
   return (
-    <View style={styles.screen}>
-      <Text
-        style={{
-          fontSize: 22,
-          fontWeight: 'bold',
-          marginTop: height * 0.02,
-          marginHorizontal: 20,
-          // marginBottom: 5,
-        }}>
-        Select Date
-      </Text>
-      <View style={styles.row}>
-        <TouchableOpacity
-          onPress={() => {
-            setShow(true);
-          }}
-          style={styles.rowInput}>
-          <View style={styles.textInput}>
-            <TextInput
-              style={{
-                fontSize: 16,
-                color: colors.dark,
-                paddingVertical: 8,
-              }}
-              editable={false}
-              maxLength={50}
-              value={getValue}
-            />
-            <Icon
-              name="calendar"
-              style={{ paddingVertical: 8 }}
-              color={colors.dark}
-              size={20}
-            />
-          </View>
-        </TouchableOpacity>
-      </View>
-      <Text
-        style={{
-          fontSize: 22,
-          fontWeight: 'bold',
-          marginHorizontal: 20,
-          marginVertical: 5,
-        }}>
-        Saloon Specialists
-      </Text>
-      <View
-        style={{
-          height: 120,
-          backgroundColor: colors.white,
-        }}>
-        <FlatList
-          style={{ flex: 1 }}
-          horizontal={true}
-          contentContainerStyle={{ paddingHorizontal: 10 }}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          data={saloonSpecialist}
-          keyExtractor={(listing) => listing.id.toString()}
-          renderItem={({ item }) => (
-            <SpecialistTimeSelection
-              title={item.title}
-              status={item.status}
-              image={item.image}
-              itemColor={item.id === getId ? getColor : colors.white}
-              onPress={() => handleSpecialistSelection(item.id)}
-            />
-          )}
-        />
-      </View>
-      <View>
+    <>
+      {loading && <LoadingIndicator />}
+      <View style={styles.screen}>
         <Text
           style={{
             fontSize: 22,
             fontWeight: 'bold',
-            // marginTop: height * 0.02,
-            marginVertical: 5,
+            marginTop: height * 0.02,
             marginHorizontal: 20,
+            // marginBottom: 5,
           }}>
-          Available Slots
+          Select Date
+        </Text>
+        <View style={styles.row}>
+          <TouchableOpacity
+            onPress={() => {
+              setShow(true);
+            }}
+            style={styles.rowInput}>
+            <View style={styles.textInput}>
+              <TextInput
+                style={{
+                  fontSize: 16,
+                  color: colors.dark,
+                  paddingVertical: 8,
+                }}
+                editable={false}
+                maxLength={50}
+                value={getValue}
+              />
+              <Icon
+                name="calendar"
+                style={{ paddingVertical: 8 }}
+                color={colors.dark}
+                size={20}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+        <Text
+          style={{
+            fontSize: 22,
+            fontWeight: 'bold',
+            marginHorizontal: 20,
+            marginVertical: 5,
+          }}>
+          Saloon Specialists
         </Text>
         <View
           style={{
-            flexDirection: 'row',
-            // alignItems: 'flex-start',
-            marginHorizontal: 10,
-            marginVertical: 5,
-            flexWrap: 'wrap',
+            height: 120,
+            backgroundColor: colors.white,
           }}>
-          {(saloonSpecialist?.find((SS) => SS.id == getId)?.slots || slots).map(
-            (slot, index) => (
+          <FlatList
+            style={{ flex: 1 }}
+            horizontal={true}
+            contentContainerStyle={{ paddingHorizontal: 10 }}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={saloonSpecialist}
+            keyExtractor={(listing) => listing.id.toString()}
+            renderItem={({ item }) => (
+              <SpecialistTimeSelection
+                title={item.title}
+                status={item.status}
+                image={item.image}
+                itemColor={item.id === getId ? getColor : colors.white}
+                onPress={() => handleSpecialistSelection(item.id)}
+              />
+            )}
+          />
+        </View>
+        <View>
+          <Text
+            style={{
+              fontSize: 22,
+              fontWeight: 'bold',
+              // marginTop: height * 0.02,
+              marginVertical: 5,
+              marginHorizontal: 20,
+            }}>
+            Available Slots
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              // alignItems: 'flex-start',
+              marginHorizontal: 10,
+              marginVertical: 5,
+              flexWrap: 'wrap',
+            }}>
+            {(
+              saloonSpecialist?.find((SS) => SS.id == getId)?.slots || slots
+            ).map((slot, index) => (
               <View
                 key={slot.id}
                 style={{
@@ -334,75 +297,75 @@ const TimeSelectionScreen = (props) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-            ),
-          )}
+            ))}
+          </View>
         </View>
-      </View>
-      <View style={{ marginTop: height * 0.03, justifyContent: 'center' }}>
-        <TouchableOpacity
-          onPress={() => {
-            bookAppointment();
-          }}>
-          <LinearGradient
-            colors={[colors.orange, colors.red]}
-            style={[styles.button]}>
-            <Text style={styles.textBtn}>Confirm</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
-      <View>
-        <Modal
-          modalTitle={
-            <ModalTitle
-              textStyle={{ color: colors.white }}
-              style={{ backgroundColor: colors.red }}
-              title="Appointment Confirmed"
-            />
-          }
-          visible={modalVisibility}
-          footer={
-            <ModalFooter>
-              <ModalButton
-                textStyle={{ color: colors.red, fontSize: 16 }}
-                text="CANCEL"
-                onPress={() => {
-                  setModalVisibility(false);
-                }}
-              />
-              <ModalButton
-                textStyle={{ color: colors.red, fontSize: 16 }}
-                text="OK"
-                onPress={() => {
-                  setModalVisibility(false);
-                  props.navigation.navigate('Appointments');
-                }}
-              />
-            </ModalFooter>
-          }>
-          <ModalContent
-            style={{
-              fontSize: 15,
-              justifyContent: 'center',
-              alignItems: 'center',
+        <View style={{ marginTop: height * 0.03, justifyContent: 'center' }}>
+          <TouchableOpacity
+            onPress={() => {
+              bookAppointment();
             }}>
-            <Text
-              style={{ flexWrap: 'wrap', alignSelf: 'center', fontSize: 16 }}>
-              Your appointment is booked. Go to appointments screen.
-            </Text>
-          </ModalContent>
-        </Modal>
+            <LinearGradient
+              colors={[colors.orange, colors.red]}
+              style={[styles.button]}>
+              <Text style={styles.textBtn}>Confirm</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Modal
+            modalTitle={
+              <ModalTitle
+                textStyle={{ color: colors.white }}
+                style={{ backgroundColor: colors.red }}
+                title="Appointment Confirmed"
+              />
+            }
+            visible={modalVisibility}
+            footer={
+              <ModalFooter>
+                <ModalButton
+                  textStyle={{ color: colors.red, fontSize: 16 }}
+                  text="CANCEL"
+                  onPress={() => {
+                    setModalVisibility(false);
+                  }}
+                />
+                <ModalButton
+                  textStyle={{ color: colors.red, fontSize: 16 }}
+                  text="OK"
+                  onPress={() => {
+                    setModalVisibility(false);
+                    props.navigation.navigate('Appointments');
+                  }}
+                />
+              </ModalFooter>
+            }>
+            <ModalContent
+              style={{
+                fontSize: 15,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{ flexWrap: 'wrap', alignSelf: 'center', fontSize: 16 }}>
+                Your appointment is booked. Go to appointments screen.
+              </Text>
+            </ModalContent>
+          </Modal>
+        </View>
+        {show && (
+          <DateTimePicker
+            onChange={onChange}
+            value={date}
+            mode="date"
+            display="default"
+            maximumDate={moment().add(30, 'days').toDate()}
+            minimumDate={new Date()}
+          />
+        )}
       </View>
-      {show && (
-        <DateTimePicker
-          onChange={onChange}
-          value={date}
-          mode="date"
-          display="default"
-          maximumDate={moment().add(30, 'days').toDate()}
-          minimumDate={new Date()}
-        />
-      )}
-    </View>
+    </>
   );
 };
 

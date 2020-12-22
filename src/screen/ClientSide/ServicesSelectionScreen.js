@@ -14,12 +14,13 @@ import axios from '../../../config';
 import LinearGradient from 'react-native-linear-gradient';
 import { Picker } from '@react-native-picker/picker';
 
-import colors from '../../styles/colors';
-
+import LoadingIndicator from '../../components/LoadingIndicator';
 import Separator from '../../components/Separator';
+import colors from '../../styles/colors';
 
 const ServicesSelectionScreen = (props) => {
   const [deviceHeight, setDeviceHeight] = useState(0);
+  const [loading, setLoading] = React.useState(false);
 
   const [hair, setHair] = useState(0);
   const [selHair, setSelHair] = useState(0);
@@ -51,6 +52,7 @@ const ServicesSelectionScreen = (props) => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     //services
     axios.get('/saloon/saloonServices/' + props.route.params.id).then((res) => {
       setHair([
@@ -85,6 +87,7 @@ const ServicesSelectionScreen = (props) => {
         { _id: -1, name: 'Select', cost: 0 },
         ...res.data.filter((SS) => SS.category == 'other'),
       ]);
+      setLoading(false);
     });
 
     //packages
@@ -120,285 +123,288 @@ const ServicesSelectionScreen = (props) => {
   ]);
 
   return (
-    <ScrollView style={{ backgroundColor: colors.white }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginHorizontal: 15,
-          marginTop: deviceHeight * 0.02,
-        }}>
-        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-          Choose you service
-        </Text>
-        <Text style={{ fontSize: 16, color: colors.red, marginEnd: '5%' }}>
-          {`Total: ${total}`}
-        </Text>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: deviceHeight * 0.03,
-        }}>
-        <Text style={styles.text}>Hair</Text>
-        <View style={styles.textInput}>
-          {hair.length !== 0 && hair.length !== 0 && (
+    <>
+      {loading && <LoadingIndicator />}
+      <ScrollView style={{ backgroundColor: colors.white }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginHorizontal: 15,
+            marginTop: deviceHeight * 0.02,
+          }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+            Choose you service
+          </Text>
+          <Text style={{ fontSize: 16, color: colors.red, marginEnd: '5%' }}>
+            {`Total: ${total}`}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: deviceHeight * 0.03,
+          }}>
+          <Text style={styles.text}>Hair</Text>
+          <View style={styles.textInput}>
+            {hair.length !== 0 && hair.length !== 0 && (
+              <Picker
+                selectedValue={hair[selHair]?._id}
+                style={{ flex: 1 }}
+                onValueChange={(val, index) => {
+                  setSelHair(index);
+                }}
+                itemStyle={styles.picker}
+                mode={'dropdown'}>
+                {hair.length > 0 &&
+                  hair.map((val) => (
+                    <Picker.Item
+                      label={`${val.name} (Rs. ${val.cost})`}
+                      value={val._id}
+                    />
+                  ))}
+              </Picker>
+            )}
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: deviceHeight * 0.03,
+          }}>
+          <Text style={styles.text}>Shave</Text>
+          <View style={styles.textInput}>
             <Picker
-              selectedValue={hair[selHair]?._id}
+              selectedValue={shave[selShave]?._id}
               style={{ flex: 1 }}
               onValueChange={(val, index) => {
-                setSelHair(index);
+                setSelShave(index);
               }}
               itemStyle={styles.picker}
               mode={'dropdown'}>
-              {hair.length > 0 &&
-                hair.map((val) => (
+              {shave.length > 0 &&
+                shave.map((val) => (
                   <Picker.Item
                     label={`${val.name} (Rs. ${val.cost})`}
                     value={val._id}
                   />
                 ))}
             </Picker>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: deviceHeight * 0.03,
+          }}>
+          <Text style={styles.text}>Styling</Text>
+          <View style={styles.textInput}>
+            <Picker
+              selectedValue={styling[selStyling]?._id}
+              style={{ flex: 1 }}
+              onValueChange={(val, index) => setSelStyling(index)}
+              itemStyle={styles.picker}
+              mode={'dropdown'}>
+              {styling.length > 0 &&
+                styling.map((val) => (
+                  <Picker.Item
+                    label={`${val.name} (Rs. ${val.cost})`}
+                    value={val._id}
+                  />
+                ))}
+            </Picker>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: deviceHeight * 0.03,
+          }}>
+          <Text style={styles.text}>Hair Color</Text>
+          <View style={styles.textInput}>
+            <Picker
+              selectedValue={hairColor[selHairColor]?._id}
+              style={{ flex: 1 }}
+              onValueChange={(val, index) => setSelHairColor(index)}
+              itemStyle={styles.picker}
+              mode={'dropdown'}>
+              {hairColor.length > 0 &&
+                hairColor.map((val) => (
+                  <Picker.Item
+                    label={`${val.name} (Rs. ${val.cost})`}
+                    value={val._id}
+                  />
+                ))}
+            </Picker>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: deviceHeight * 0.03,
+          }}>
+          <Text style={styles.text}>Waxing</Text>
+          <View style={styles.textInput}>
+            <Picker
+              selectedValue={waxing[selWaxing]?._id}
+              style={{ flex: 1 }}
+              onValueChange={(val, index) => setSelWaxing(index)}
+              itemStyle={styles.picker}
+              mode={'dropdown'}>
+              {waxing.length > 0 &&
+                waxing.map((val) => (
+                  <Picker.Item
+                    label={`${val.name} (Rs. ${val.cost})`}
+                    value={val._id}
+                  />
+                ))}
+            </Picker>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: deviceHeight * 0.03,
+          }}>
+          <Text style={styles.text}>Men's Services</Text>
+          <View style={styles.textInput}>
+            <Picker
+              selectedValue={menServices[selMenServices]?._id}
+              style={{ flex: 1 }}
+              onValueChange={(val, index) => setSelMenServices(index)}
+              itemStyle={styles.picker}
+              mode={'dropdown'}>
+              {menServices.length > 0 &&
+                menServices.map((val) => (
+                  <Picker.Item
+                    label={`${val.name} (Rs. ${val.cost})`}
+                    value={val._id}
+                  />
+                ))}
+            </Picker>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: deviceHeight * 0.03,
+          }}>
+          <Text style={styles.text}>Nails</Text>
+          <View style={styles.textInput}>
+            <Picker
+              selectedValue={nails[selNails]?._id}
+              style={{ flex: 1 }}
+              onValueChange={(val, index) => setSelNails(index)}
+              itemStyle={styles.picker}
+              mode={'dropdown'}>
+              {nails.length > 0 &&
+                nails.map((val) => (
+                  <Picker.Item
+                    label={`${val.name} (Rs. ${val.cost})`}
+                    value={val._id}
+                  />
+                ))}
+            </Picker>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: deviceHeight * 0.03,
+          }}>
+          <Text style={styles.text}>Others</Text>
+          <View style={styles.textInput}>
+            <Picker
+              selectedValue={others[selOther]?._id}
+              style={{ flex: 1 }}
+              onValueChange={(val, index) => setSelOthers(index)}
+              itemStyle={styles.picker}
+              mode={'dropdown'}>
+              {others.length > 0 &&
+                others.map((val) => (
+                  <Picker.Item
+                    label={`${val.name} (Rs. ${val.cost})`}
+                    value={val._id}
+                  />
+                ))}
+            </Picker>
+          </View>
+        </View>
+        <View style={{ marginTop: deviceHeight * 0.03 }}>
+          <Separator />
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: deviceHeight * 0.03,
+          }}>
+          <Text style={styles.text}>Packages</Text>
+          <View style={styles.textInput}>
+            <Picker
+              selectedValue={packages[selPackages]?._id}
+              style={{ flex: 1 }}
+              onValueChange={(val, index) => setSelPackages(index)}
+              itemStyle={styles.picker}
+              mode={'dropdown'}>
+              {packages.length > 0 &&
+                packages.map((val) => (
+                  <Picker.Item
+                    label={`${val.name} (Rs. ${val.cost})`}
+                    value={val._id}
+                  />
+                ))}
+            </Picker>
+          </View>
+        </View>
+        <View style={{ marginTop: deviceHeight * 0.03 }}>
+          {total !== 0 && (
+            <LinearGradient
+              colors={[colors.orange, colors.red]}
+              style={[styles.button]}>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('Select Time', {
+                    id: props.route.params.id,
+                    selected: {
+                      hair: hair[selHair]?._id,
+                      shave: shave[selShave]?._id,
+                      styling: styling[selStyling]?._id,
+                      hairColor: hairColor[selHairColor]?._id,
+                      waxing: waxing[selWaxing]?._id,
+                      menServices: menServices[selMenServices]?._id,
+                      nails: nails[selNails]?._id,
+                      others: others[selOther]?._id,
+                      packages: packages[selPackages]?._id,
+                    },
+                    total,
+                  });
+                }}>
+                <Text style={styles.textBtn}>Continue</Text>
+              </TouchableOpacity>
+            </LinearGradient>
           )}
         </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: deviceHeight * 0.03,
-        }}>
-        <Text style={styles.text}>Shave</Text>
-        <View style={styles.textInput}>
-          <Picker
-            selectedValue={shave[selShave]?._id}
-            style={{ flex: 1 }}
-            onValueChange={(val, index) => {
-              setSelShave(index);
-            }}
-            itemStyle={styles.picker}
-            mode={'dropdown'}>
-            {shave.length > 0 &&
-              shave.map((val) => (
-                <Picker.Item
-                  label={`${val.name} (Rs. ${val.cost})`}
-                  value={val._id}
-                />
-              ))}
-          </Picker>
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: deviceHeight * 0.03,
-        }}>
-        <Text style={styles.text}>Styling</Text>
-        <View style={styles.textInput}>
-          <Picker
-            selectedValue={styling[selStyling]?._id}
-            style={{ flex: 1 }}
-            onValueChange={(val, index) => setSelStyling(index)}
-            itemStyle={styles.picker}
-            mode={'dropdown'}>
-            {styling.length > 0 &&
-              styling.map((val) => (
-                <Picker.Item
-                  label={`${val.name} (Rs. ${val.cost})`}
-                  value={val._id}
-                />
-              ))}
-          </Picker>
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: deviceHeight * 0.03,
-        }}>
-        <Text style={styles.text}>Hair Color</Text>
-        <View style={styles.textInput}>
-          <Picker
-            selectedValue={hairColor[selHairColor]?._id}
-            style={{ flex: 1 }}
-            onValueChange={(val, index) => setSelHairColor(index)}
-            itemStyle={styles.picker}
-            mode={'dropdown'}>
-            {hairColor.length > 0 &&
-              hairColor.map((val) => (
-                <Picker.Item
-                  label={`${val.name} (Rs. ${val.cost})`}
-                  value={val._id}
-                />
-              ))}
-          </Picker>
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: deviceHeight * 0.03,
-        }}>
-        <Text style={styles.text}>Waxing</Text>
-        <View style={styles.textInput}>
-          <Picker
-            selectedValue={waxing[selWaxing]?._id}
-            style={{ flex: 1 }}
-            onValueChange={(val, index) => setSelWaxing(index)}
-            itemStyle={styles.picker}
-            mode={'dropdown'}>
-            {waxing.length > 0 &&
-              waxing.map((val) => (
-                <Picker.Item
-                  label={`${val.name} (Rs. ${val.cost})`}
-                  value={val._id}
-                />
-              ))}
-          </Picker>
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: deviceHeight * 0.03,
-        }}>
-        <Text style={styles.text}>Men's Services</Text>
-        <View style={styles.textInput}>
-          <Picker
-            selectedValue={menServices[selMenServices]?._id}
-            style={{ flex: 1 }}
-            onValueChange={(val, index) => setSelMenServices(index)}
-            itemStyle={styles.picker}
-            mode={'dropdown'}>
-            {menServices.length > 0 &&
-              menServices.map((val) => (
-                <Picker.Item
-                  label={`${val.name} (Rs. ${val.cost})`}
-                  value={val._id}
-                />
-              ))}
-          </Picker>
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: deviceHeight * 0.03,
-        }}>
-        <Text style={styles.text}>Nails</Text>
-        <View style={styles.textInput}>
-          <Picker
-            selectedValue={nails[selNails]?._id}
-            style={{ flex: 1 }}
-            onValueChange={(val, index) => setSelNails(index)}
-            itemStyle={styles.picker}
-            mode={'dropdown'}>
-            {nails.length > 0 &&
-              nails.map((val) => (
-                <Picker.Item
-                  label={`${val.name} (Rs. ${val.cost})`}
-                  value={val._id}
-                />
-              ))}
-          </Picker>
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: deviceHeight * 0.03,
-        }}>
-        <Text style={styles.text}>Others</Text>
-        <View style={styles.textInput}>
-          <Picker
-            selectedValue={others[selOther]?._id}
-            style={{ flex: 1 }}
-            onValueChange={(val, index) => setSelOthers(index)}
-            itemStyle={styles.picker}
-            mode={'dropdown'}>
-            {others.length > 0 &&
-              others.map((val) => (
-                <Picker.Item
-                  label={`${val.name} (Rs. ${val.cost})`}
-                  value={val._id}
-                />
-              ))}
-          </Picker>
-        </View>
-      </View>
-      <View style={{ marginTop: deviceHeight * 0.03 }}>
-        <Separator />
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: deviceHeight * 0.03,
-        }}>
-        <Text style={styles.text}>Packages</Text>
-        <View style={styles.textInput}>
-          <Picker
-            selectedValue={packages[selPackages]?._id}
-            style={{ flex: 1 }}
-            onValueChange={(val, index) => setSelPackages(index)}
-            itemStyle={styles.picker}
-            mode={'dropdown'}>
-            {packages.length > 0 &&
-              packages.map((val) => (
-                <Picker.Item
-                  label={`${val.name} (Rs. ${val.cost})`}
-                  value={val._id}
-                />
-              ))}
-          </Picker>
-        </View>
-      </View>
-      <View style={{ marginTop: deviceHeight * 0.03 }}>
-        {total !== 0 && (
-          <LinearGradient
-            colors={[colors.orange, colors.red]}
-            style={[styles.button]}>
-            <TouchableOpacity
-              onPress={() => {
-                props.navigation.navigate('Select Time', {
-                  id: props.route.params.id,
-                  selected: {
-                    hair: hair[selHair]?._id,
-                    shave: shave[selShave]?._id,
-                    styling: styling[selStyling]?._id,
-                    hairColor: hairColor[selHairColor]?._id,
-                    waxing: waxing[selWaxing]?._id,
-                    menServices: menServices[selMenServices]?._id,
-                    nails: nails[selNails]?._id,
-                    others: others[selOther]?._id,
-                    packages: packages[selPackages]?._id,
-                  },
-                  total,
-                });
-              }}>
-              <Text style={styles.textBtn}>Continue</Text>
-            </TouchableOpacity>
-          </LinearGradient>
-        )}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 };
 

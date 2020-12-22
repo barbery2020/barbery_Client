@@ -10,131 +10,23 @@ import {
   Linking,
   LogBox,
 } from 'react-native';
-import { Rating } from 'react-native-ratings';
 import LinearGradient from 'react-native-linear-gradient';
-import Foundation from 'react-native-vector-icons/Foundation';
 import Ant from 'react-native-vector-icons/AntDesign';
 
+import LoadingIndicator from '../../components/LoadingIndicator';
 import SpecialistCard from '../../components/SpecialistCard';
 import ReviewCard from '../../components/ReviewCard';
 import colors from '../../styles/colors';
 import axios from '../../../config';
 
-const salon = {
-  id: 1,
-  image: require('../../assets/images/image_1.jpg'),
-  title: 'Tuseeq Raza',
-  subTitle: 'G9, markaz, Islamabad',
-  rating: 4.5,
-};
-
-const listings = [
-  {
-    id: 1,
-    title: 'Tuseeq',
-    status: 'Active',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 2,
-    title: 'Raza',
-    status: 'Active',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 3,
-    title: 'Humza',
-    status: 'Inactive',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 4,
-    title: 'Abdullah',
-    status: 'Active',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 5,
-    title: 'Asim',
-    status: 'Active',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 6,
-    title: 'Nadeem',
-    status: 'Active',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-];
-
-const reviews = [
-  {
-    id: 1,
-    name: 'Tuseeq Raza',
-    rated: 5,
-    text:
-      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 2,
-    name: 'Tuseeq Ahmed',
-    rated: 4,
-    text:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    time: 'Oct 17, 2020 9:50 AM',
-    image: require('../../assets/images/image_2.jpg'),
-  },
-  {
-    id: 3,
-    name: 'Tuseeq Raza',
-    rated: 3,
-    text:
-      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 4,
-    name: 'Tuseeq Ahmed',
-    rated: 2,
-    text:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    time: 'Oct 17, 2020 9:50 AM',
-    image: require('../../assets/images/image_2.jpg'),
-  },
-  {
-    id: 5,
-    name: 'Tuseeq Raza',
-    rated: 1,
-    text:
-      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    time: 'Oct 23, 2020 4:50 PM',
-    image: require('../../assets/images/image_1.jpg'),
-  },
-  {
-    id: 6,
-    name: 'Tuseeq Ahmed',
-    rated: 0,
-    text:
-      'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.',
-    time: 'Oct 17, 2020 9:50 AM',
-    image: require('../../assets/images/image_2.jpg'),
-  },
-];
-
 export default function SalonProfileScreen(props) {
   const [saloonSpecialists, setSaloonSpecialists] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [salons, setSalon] = useState();
-  const [getCoordinate, setCoordinate] = useState({
-    latitude: 33.656969,
-    longitude: 73.153954,
-    latitudeDelta: 0.001,
-    longitudeDelta: 0.001,
-  });
+  const [loading, setLoading] = React.useState(false);
+
   useEffect(() => {
+    setLoading(true);
     //salon details
     axios.get(`/saloon/barber/${props?.route?.params?.id}`).then((res) => {
       setSalon({
@@ -181,6 +73,7 @@ export default function SalonProfileScreen(props) {
             rated: Number(val?.review?.stars),
           })),
         );
+        setLoading(false);
       });
   }, [props.route.params.id]);
   useEffect(() => {});
@@ -197,6 +90,7 @@ export default function SalonProfileScreen(props) {
 
   return (
     <>
+      {loading && <LoadingIndicator />}
       <ImageBackground style={styles.image} source={{ uri: salons?.image }}>
         <LinearGradient
           colors={[(0, 0, 0, 0), (0, 0, 0, 0), colors.black]}
@@ -225,18 +119,6 @@ export default function SalonProfileScreen(props) {
             <View style={styles.detailsContainer}>
               <Text style={styles.title}>{salons?.title}</Text>
               <Text style={styles.subTitle}>{salons?.subTitle}</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                position: 'absolute',
-                right: 20,
-                bottom: 5,
-              }}>
-              <Text style={styles.ratingText}>{salons?.rating}</Text>
-              <Foundation name="star" size={18} color="#F0C30E" />
             </View>
           </View>
         </LinearGradient>
