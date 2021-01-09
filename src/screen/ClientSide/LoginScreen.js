@@ -17,8 +17,8 @@ import { connect } from 'react-redux';
 import { login } from '../../redux/actions/user';
 
 function LoginScreen({ navigation: { navigate }, token, loading, login }) {
-  const [email, setEmail] = useState('tuseeq1@gmail.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     if (token) {

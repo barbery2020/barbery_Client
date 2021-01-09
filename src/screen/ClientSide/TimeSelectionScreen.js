@@ -9,6 +9,7 @@ import {
   Dimensions,
   Platform,
   FlatList,
+  LogBox,
 } from 'react-native';
 import Modal, {
   ModalTitle,
@@ -102,6 +103,10 @@ const TimeSelectionScreen = (props) => {
 
   const [loading, setLoading] = React.useState(false);
 
+  useEffect(() => {
+    LogBox.ignoreLogs(['Possible Unhandled Promise Rejection']);
+  }, []);
+
   const bookAppointment = () => {
     let payload = {
       bill: props.route.params.total,
@@ -114,7 +119,10 @@ const TimeSelectionScreen = (props) => {
       barber: props.route.params.id,
     };
     console.log('PAYLOAD 11111111', payload);
-    axios.post('/appointment', payload).then((res) => console.log(res.data));
+    axios.post('/appointment', payload).then((res) => {
+      console.log(res.data);
+    });
+    setModalVisibility(true);
   };
   useEffect(() => {
     setLoading(true);

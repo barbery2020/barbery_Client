@@ -16,12 +16,12 @@ import { connect } from 'react-redux';
 import { signup } from '../../redux/actions/user';
 
 function RegisterScreen({ navigation: { navigate }, token, loading, signup }) {
-  const [firstName, setFirstName] = useState('Ahmed');
-  const [lastName, setLastName] = useState('Raza');
-  const [email, setEmail] = useState('tuseeq1@gmail.com');
-  const [phone, setPhone] = useState('+923164512345');
-  const [password, setPassword] = useState('123456');
-  const [conPassword, setConPassword] = useState('123456');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [conPassword, setConPassword] = useState('');
 
   useEffect(() => {
     if (token) {

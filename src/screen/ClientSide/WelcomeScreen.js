@@ -23,7 +23,7 @@ function WelcomeScreen({ navigation: { navigate }, token }) {
   return (
     <View style={styles.container}>
       <ImageBackground
-        blurRadius={2}
+        blurRadius={1}
         style={styles.background}
         source={require('../../assets/images/image_10.jpg')}
         onLoadEnd={(isLoading) => setLoading(!isLoading)}>
